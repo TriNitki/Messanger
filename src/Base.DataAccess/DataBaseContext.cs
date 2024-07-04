@@ -17,6 +17,8 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
 
     internal DbSet<RefreshToken> RefreshTokens { get; set; }
 
+    internal DbSet<RefreshTokenFamily> RefreshTokenFamilies { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

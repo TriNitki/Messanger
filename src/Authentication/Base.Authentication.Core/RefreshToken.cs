@@ -6,9 +6,9 @@
 public class RefreshToken
 {
     /// <summary>
-    /// Token
+    /// Content
     /// </summary>
-    public string Token { get; set;  }
+    public string Content { get; set;  }
 
     /// <summary>
     /// Expiration date time
@@ -24,6 +24,16 @@ public class RefreshToken
     /// User id
     /// </summary>
     public Guid UserId { get; set; }
+
+    /// <summary>
+    /// Token family id
+    /// </summary>
+    public Guid FamilyId { get; set; }
+
+    /// <summary>
+    /// Token family
+    /// </summary>
+    public RefreshTokenFamily? Family { get; set; }
 
     /// <summary>
     /// Check token validity

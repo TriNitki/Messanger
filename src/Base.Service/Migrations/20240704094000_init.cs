@@ -24,6 +24,18 @@ namespace Base.Service.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "refresh_token_families",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    is_locked = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_refresh_token_families", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "role",
                 columns: table => new
                 {
@@ -79,14 +91,21 @@ namespace Base.Service.Migrations
                 name: "refresh_tokens",
                 columns: table => new
                 {
-                    token = table.Column<string>(type: "text", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
                     expiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     is_used = table.Column<bool>(type: "boolean", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    family_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_refresh_tokens", x => x.token);
+                    table.PrimaryKey("pk_refresh_tokens", x => x.content);
+                    table.ForeignKey(
+                        name: "fk_refresh_tokens_refresh_token_families_family_id",
+                        column: x => x.family_id,
+                        principalTable: "refresh_token_families",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_refresh_tokens_users_user_id",
                         column: x => x.user_id,
@@ -119,6 +138,16 @@ namespace Base.Service.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "role",
+                columns: new[] { "name", "description" },
+                values: new object[] { "DefaultRole", "Default role" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_refresh_tokens_family_id",
+                table: "refresh_tokens",
+                column: "family_id");
+
             migrationBuilder.CreateIndex(
                 name: "ix_refresh_tokens_user_id",
                 table: "refresh_tokens",
@@ -146,6 +175,9 @@ namespace Base.Service.Migrations
 
             migrationBuilder.DropTable(
                 name: "role_to_user");
+
+            migrationBuilder.DropTable(
+                name: "refresh_token_families");
 
             migrationBuilder.DropTable(
                 name: "features");

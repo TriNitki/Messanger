@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Base.DataAccess\Base.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

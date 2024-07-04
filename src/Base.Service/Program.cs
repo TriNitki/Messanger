@@ -94,6 +94,7 @@ public class Program
         services.AddDataContext<DataBaseContext>(configuration);
 
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IRefreshTokenFamilyRepository, RefreshTokenFamilyRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
