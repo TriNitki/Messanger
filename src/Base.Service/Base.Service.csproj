@@ -4,6 +4,25 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NLog" Version="5.3.2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Packages\Packages.Application.Consul\Packages.Application.Consul.csproj" />
+    <ProjectReference Include="..\..\Packages\Packages.Application.Data\Packages.Application.Data.csproj" />
+    <ProjectReference Include="..\Authentication\Base.Authentication.Integration\Base.Authentication.Integration.csproj" />
+    <ProjectReference Include="..\Base.Authorization\Base.Authorization.csproj" />
+    <ProjectReference Include="..\Base.DataAccess\Base.DataAccess.csproj" />
+  </ItemGroup>
 
 </Project>

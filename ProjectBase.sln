@@ -3,23 +3,41 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Service", "src\Base.Service\Base.Service.csproj", "{73BA34E4-0698-4772-9B83-540F23A45E45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Service", "src\Base.Service\Base.Service.csproj", "{73BA34E4-0698-4772-9B83-540F23A45E45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.DataAccess", "src\Base.DataAccess\Base.DataAccess.csproj", "{2BD0959C-B296-4633-8642-06C143E3BE52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.DataAccess", "src\Base.DataAccess\Base.DataAccess.csproj", "{2BD0959C-B296-4633-8642-06C143E3BE52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authorization", "src\Base.Authorization\Base.Authorization.csproj", "{FBE5C0E2-48B3-410D-8163-2B815CD3D8A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authorization", "src\Base.Authorization\Base.Authorization.csproj", "{FBE5C0E2-48B3-410D-8163-2B815CD3D8A2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{B2FE58EE-A772-4807-8F14-4935702A4E11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authentication.Clients", "src\Authentication\Base.Authentication.Clients\Base.Authentication.Clients.csproj", "{9DBBDE0C-B598-4352-B9A1-D10395D598EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authentication.Clients", "src\Authentication\Base.Authentication.Clients\Base.Authentication.Clients.csproj", "{9DBBDE0C-B598-4352-B9A1-D10395D598EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authentication.Contracts", "src\Authentication\Base.Authentication.Contracts\Base.Authentication.Contracts.csproj", "{728C862A-3892-4050-A4B7-B71B6D56285B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authentication.Contracts", "src\Authentication\Base.Authentication.Contracts\Base.Authentication.Contracts.csproj", "{728C862A-3892-4050-A4B7-B71B6D56285B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authentication.Core", "src\Authentication\Base.Authentication.Core\Base.Authentication.Core.csproj", "{108C8839-A62E-4046-8466-A24DE73CD4FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authentication.Core", "src\Authentication\Base.Authentication.Core\Base.Authentication.Core.csproj", "{108C8839-A62E-4046-8466-A24DE73CD4FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authentication.Integration", "src\Authentication\Base.Authentication.Integration\Base.Authentication.Integration.csproj", "{0B9F78BA-F060-4D31-8C23-06DF5DFDDBDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authentication.Integration", "src\Authentication\Base.Authentication.Integration\Base.Authentication.Integration.csproj", "{0B9F78BA-F060-4D31-8C23-06DF5DFDDBDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Base.Authentication.UseCases", "src\Authentication\Base.Authentication.UseCases\Base.Authentication.UseCases.csproj", "{A009A81A-AAC0-4197-B619-450AFCC25A0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Authentication.UseCases", "src\Authentication\Base.Authentication.UseCases\Base.Authentication.UseCases.csproj", "{A009A81A-AAC0-4197-B619-450AFCC25A0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{CBA14B27-0F65-413E-A893-51365B2FDE62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Permission", "Permission", "{2FC31EE1-987D-4010-BDA1-7601513A8965}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{79E90EDD-A3A0-439E-B664-8DE2EC28137A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packages.Application.Consul", "Packages\Packages.Application.Consul\Packages.Application.Consul.csproj", "{A48ECB5A-3A7D-4EA6-90E1-109382F638AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packages.Application.Data", "Packages\Packages.Application.Data\Packages.Application.Data.csproj", "{3215F339-C255-45C5-8F6F-5B4835ED8B34}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Packages.Application.UseCases", "Packages\Packages.Application.UseCases\Packages.Application.UseCases.csproj", "{70C0CC9A-3420-4832-9EDA-137EAA561F5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Permission.Clients", "src\Permission\Base.Permission.Clients\Base.Permission.Clients.csproj", "{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Permission.Core", "src\Permission\Base.Permission.Core\Base.Permission.Core.csproj", "{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Base.Permission.UseCases", "src\Permission\Base.Permission.UseCases\Base.Permission.UseCases.csproj", "{9870A42D-5E6B-4A96-9918-C848B81D61AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,16 +77,51 @@ Global
 		{A009A81A-AAC0-4197-B619-450AFCC25A0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A009A81A-AAC0-4197-B619-450AFCC25A0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A009A81A-AAC0-4197-B619-450AFCC25A0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A48ECB5A-3A7D-4EA6-90E1-109382F638AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A48ECB5A-3A7D-4EA6-90E1-109382F638AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A48ECB5A-3A7D-4EA6-90E1-109382F638AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A48ECB5A-3A7D-4EA6-90E1-109382F638AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3215F339-C255-45C5-8F6F-5B4835ED8B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3215F339-C255-45C5-8F6F-5B4835ED8B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3215F339-C255-45C5-8F6F-5B4835ED8B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3215F339-C255-45C5-8F6F-5B4835ED8B34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C0CC9A-3420-4832-9EDA-137EAA561F5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C0CC9A-3420-4832-9EDA-137EAA561F5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C0CC9A-3420-4832-9EDA-137EAA561F5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C0CC9A-3420-4832-9EDA-137EAA561F5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9870A42D-5E6B-4A96-9918-C848B81D61AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9870A42D-5E6B-4A96-9918-C848B81D61AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9870A42D-5E6B-4A96-9918-C848B81D61AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9870A42D-5E6B-4A96-9918-C848B81D61AE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{73BA34E4-0698-4772-9B83-540F23A45E45} = {79E90EDD-A3A0-439E-B664-8DE2EC28137A}
+		{2BD0959C-B296-4633-8642-06C143E3BE52} = {79E90EDD-A3A0-439E-B664-8DE2EC28137A}
+		{FBE5C0E2-48B3-410D-8163-2B815CD3D8A2} = {79E90EDD-A3A0-439E-B664-8DE2EC28137A}
+		{B2FE58EE-A772-4807-8F14-4935702A4E11} = {79E90EDD-A3A0-439E-B664-8DE2EC28137A}
 		{9DBBDE0C-B598-4352-B9A1-D10395D598EA} = {B2FE58EE-A772-4807-8F14-4935702A4E11}
 		{728C862A-3892-4050-A4B7-B71B6D56285B} = {B2FE58EE-A772-4807-8F14-4935702A4E11}
 		{108C8839-A62E-4046-8466-A24DE73CD4FF} = {B2FE58EE-A772-4807-8F14-4935702A4E11}
 		{0B9F78BA-F060-4D31-8C23-06DF5DFDDBDE} = {B2FE58EE-A772-4807-8F14-4935702A4E11}
 		{A009A81A-AAC0-4197-B619-450AFCC25A0F} = {B2FE58EE-A772-4807-8F14-4935702A4E11}
+		{2FC31EE1-987D-4010-BDA1-7601513A8965} = {79E90EDD-A3A0-439E-B664-8DE2EC28137A}
+		{A48ECB5A-3A7D-4EA6-90E1-109382F638AB} = {CBA14B27-0F65-413E-A893-51365B2FDE62}
+		{3215F339-C255-45C5-8F6F-5B4835ED8B34} = {CBA14B27-0F65-413E-A893-51365B2FDE62}
+		{70C0CC9A-3420-4832-9EDA-137EAA561F5D} = {CBA14B27-0F65-413E-A893-51365B2FDE62}
+		{D1B0592C-F18E-4D14-9F55-A1C7ED0582DD} = {2FC31EE1-987D-4010-BDA1-7601513A8965}
+		{69FE7FC3-97C8-4AFD-9FFD-DF4159F55248} = {2FC31EE1-987D-4010-BDA1-7601513A8965}
+		{9870A42D-5E6B-4A96-9918-C848B81D61AE} = {2FC31EE1-987D-4010-BDA1-7601513A8965}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FF4800E-F6C4-4F64-85F8-9464485347B9}
