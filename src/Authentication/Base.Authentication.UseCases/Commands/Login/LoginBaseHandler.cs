@@ -25,9 +25,9 @@ public abstract class LoginBaseHandler
     public async Task<Result<Tokens>> Handle(AuthUser user)
     {
         string accessToken = await _tokenService.GenerateAccessToken(user);
-        RefreshToken refreshToken = await _tokenService.GenerateRefreshToken(user.Id);
+        RefreshToken refreshToken = await _tokenService.GenerateRefreshToken(user.Id, Guid.NewGuid());
 
         return Result<Tokens>.Success(
-            new Tokens(accessToken, refreshToken.Token, refreshToken.Expiration));
+            new Tokens(accessToken, refreshToken.Content, refreshToken.Expiration));
     } 
 }

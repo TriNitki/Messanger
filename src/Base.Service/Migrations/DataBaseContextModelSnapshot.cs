@@ -24,13 +24,17 @@ namespace Base.Service.Migrations
 
             modelBuilder.Entity("Base.Authentication.Core.RefreshToken", b =>
                 {
-                    b.Property<string>("Token")
+                    b.Property<string>("Content")
                         .HasColumnType("text")
-                        .HasColumnName("token");
+                        .HasColumnName("content");
 
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiration");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("boolean")
@@ -40,13 +44,33 @@ namespace Base.Service.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    b.HasKey("Token")
+                    b.HasKey("Content")
                         .HasName("pk_refresh_tokens");
+
+                    b.HasIndex("FamilyId")
+                        .HasDatabaseName("ix_refresh_tokens_family_id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_refresh_tokens_user_id");
 
                     b.ToTable("refresh_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("Base.Authentication.Core.RefreshTokenFamily", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_locked");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_token_families");
+
+                    b.ToTable("refresh_token_families", (string)null);
                 });
 
             modelBuilder.Entity("Base.DataAccess.Entities.Feature", b =>
@@ -81,6 +105,13 @@ namespace Base.Service.Migrations
                         .HasName("pk_role");
 
                     b.ToTable("role", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Name = "DefaultRole",
+                            Description = "Default role"
+                        });
                 });
 
             modelBuilder.Entity("Base.DataAccess.Entities.RoleToFeature", b =>
@@ -157,12 +188,21 @@ namespace Base.Service.Migrations
 
             modelBuilder.Entity("Base.Authentication.Core.RefreshToken", b =>
                 {
+                    b.HasOne("Base.Authentication.Core.RefreshTokenFamily", "Family")
+                        .WithMany()
+                        .HasForeignKey("FamilyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_tokens_refresh_token_families_family_id");
+
                     b.HasOne("Base.DataAccess.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_refresh_tokens_users_user_id");
+
+                    b.Navigation("Family");
                 });
 
             modelBuilder.Entity("Base.DataAccess.Entities.RoleToFeature", b =>

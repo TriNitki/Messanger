@@ -11,12 +11,10 @@ namespace Base.DataAccess.Repositories;
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
     private readonly DataBaseContext _context;
-    private readonly IMapper _mapper;
 
     public RefreshTokenRepository(DataBaseContext context, IMapper mapper)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
 
     /// <inheritdoc/>
@@ -24,10 +22,11 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     {
         var entity = await _context.RefreshTokens
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Token == token)
+            .Include(x => x.Family)
+            .FirstOrDefaultAsync(x => x.Content == token)
             .ConfigureAwait(false);
 
-        return _mapper.Map<RefreshToken>(entity);
+        return entity;
     }
 
     /// <inheritdoc/>

@@ -15,16 +15,17 @@ public interface ITokenService
     Task<string> GenerateAccessToken(AuthUser user);
 
     /// <summary>
-    /// Generate referesh token
+    /// Generate refresh token
     /// </summary>
     /// <param name="userId"> User id </param>
+    /// <param name="tokenFamilyId"> Token family id </param>
     /// <returns> Refresh token </returns>
-    Task<RefreshToken> GenerateRefreshToken(Guid userId);
+    Task<RefreshToken> GenerateRefreshToken(Guid userId, Guid tokenFamilyId);
 
     /// <summary>
-    /// Deactivate refresh token
+    /// Use refresh token
     /// </summary>
     /// <param name="token"> Refresh token </param>
     /// <returns> Deactivated refresh token </returns>
-    Task<RefreshToken?> DeactivateRefreshToken(string token);
+    Task<RefreshToken?> UseRefreshToken(string token);
 }

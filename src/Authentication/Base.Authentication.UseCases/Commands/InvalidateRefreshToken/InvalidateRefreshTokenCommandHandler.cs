@@ -18,7 +18,7 @@ public class InvalidateRefreshTokenCommandHandler : IRequestHandler<InvalidateRe
 
     public async Task<Result<Unit>> Handle(InvalidateRefreshTokenCommand request, CancellationToken cancellationToken)
     {
-        await _tokenService.DeactivateRefreshToken(request.RefreshToken);
+        await _tokenService.UseRefreshToken(request.RefreshToken);
         return Result<Unit>.NoContent();
     }
 }

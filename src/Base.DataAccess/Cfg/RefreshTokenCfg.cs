@@ -12,7 +12,7 @@ internal class RefreshTokenCfg : IEntityTypeConfiguration<RefreshToken>
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
-        builder.HasKey(x => x.Token);
+        builder.HasKey(x => x.Content);
 
         builder.HasOne<User>()
             .WithMany()
