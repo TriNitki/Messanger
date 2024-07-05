@@ -1,6 +1,4 @@
-﻿using Application.UseCases;
-
-namespace Packages.Application.UseCases;
+﻿namespace Packages.Application.UseCases;
 
 /// <summary>
 /// Value wrapper containing status code
@@ -10,160 +8,115 @@ public readonly struct Result<TResponseValue>
 {
     private const string StatusErrorMsg = "Status {0} does not imply a result";
 
-    private const string ValueErrorMsg = "Result value not set";
+    private const string ValueErrorMsg = "Result value is not specified";
 
-    private readonly TResponseValue? _value;
+    private readonly TResponseValue? _value = default;
 
-    public ResultStatus Status { get; }
+    public ResultStatus Status { get; } = ResultStatus.Unknown;
 
     public bool IsSuccess => Status.IsSuccess();
 
-    public IReadOnlyCollection<string>? Errors { get; }
+    public IReadOnlyCollection<string>? Errors { get; } = null;
 
+    #region factories
     /// <summary>
     /// Mark result as status code 200 (OK)
     /// </summary>
     /// <param name="value"> Value </param>
     /// <returns> Result with status code and value </returns>
-    public static Result<TResponseValue> Success(TResponseValue value)
-    {
-        return new Result<TResponseValue>(value);
-    }
-
+    public static Result<TResponseValue> Success(TResponseValue value) => new(value);
     /// <summary>
     /// Mark result as status code 201 (Created)
     /// </summary>
     /// <param name="value"> Value </param>
     /// <returns> Result with status code and value </returns>
-    public static Result<TResponseValue> Created(TResponseValue value)
-    {
-        return new Result<TResponseValue>(value, ResultStatus.Created);
-    }
-
+    public static Result<TResponseValue> Created(TResponseValue value) => new(value, ResultStatus.Created);
     /// <summary>
     /// Mark result as status code 204 (No Content)
     /// </summary>
     /// <returns> Result with status code </returns>
-    public static Result<TResponseValue> NoContent()
-    {
-        return new Result<TResponseValue>(ResultStatus.NoContent);
-    }
-
+    public static Result<TResponseValue> NoContent() => new(ResultStatus.NoContent);
     /// <summary>
     /// Mark result as status code 400 (Bad Request)
     /// </summary>
     /// <param name="errors"> Errors </param>
     /// <returns> Result with status code and errors </returns>
-    public static Result<TResponseValue> Invalid(IReadOnlyCollection<string> errors)
-    {
-        return new Result<TResponseValue>(errors, ResultStatus.Invalid);
-    }
-
+    public static Result<TResponseValue> Invalid(IReadOnlyCollection<string> errors) => new(errors, ResultStatus.Invalid);
     /// <summary>
     /// Mark result as status code 400 (Bad Request)
     /// </summary>
     /// <param name="error"> Error </param>
     /// <returns> Result with status code and error </returns>
-    public static Result<TResponseValue> Invalid(string error)
-    {
-        return new Result<TResponseValue>(new List<string> { error }, ResultStatus.Invalid);
-    }
-
+    public static Result<TResponseValue> Invalid(string error) => new(new List<string> { error }, ResultStatus.Invalid);
     /// <summary>
     /// Mark result as status code 401 (Unauthorized)
     /// </summary>
     /// <param name="errors"> Errors </param>
     /// <returns> Result with status code and errors </returns>
-    public static Result<TResponseValue> Unauthorized(IReadOnlyCollection<string> errors)
-    {
-        return new Result<TResponseValue>(errors, ResultStatus.Unauthorized);
-    }
+    public static Result<TResponseValue> Unauthorized(IReadOnlyCollection<string> errors) => new(errors, ResultStatus.Unauthorized);
 
     /// <summary>
     /// Mark result as status code 401 (Unauthorized)
     /// </summary>
     /// <param name="error"> Error </param>
     /// <returns> Result with status code and error </returns>
-    public static Result<TResponseValue> Unauthorized(string error)
-    {
-        return new Result<TResponseValue>(new List<string> { error }, ResultStatus.Unauthorized);
-    }
-
+    public static Result<TResponseValue> Unauthorized(string error) => new(new List<string> { error }, ResultStatus.Unauthorized);
     /// <summary>
     /// Mark result as status code 403 (Forbidden)
     /// </summary>
     /// <returns> Result with status code </returns>
-    public static Result<TResponseValue> Forbidden()
-    {
-        return new Result<TResponseValue>(ResultStatus.Forbidden);
-    }
-
+    public static Result<TResponseValue> Forbidden() => new(ResultStatus.Forbidden);
     /// <summary>
     /// Mark result as status code 409 (Conflict)
     /// </summary>
     /// <param name="errors"> Errors </param>
     /// <returns> Result with status code and errors </returns>
-    public static Result<TResponseValue> Conflict(IReadOnlyCollection<string> errors)
-    {
-        return new Result<TResponseValue>(errors, ResultStatus.Conflict);
-    }
-
+    public static Result<TResponseValue> Conflict(IReadOnlyCollection<string> errors) => new(errors, ResultStatus.Conflict);
     /// <summary>
     /// Mark result as status code 409 (Conflict)
     /// </summary>
     /// <param name="error"> Error </param>
     /// <returns> Result with status code and error </returns>
-    public static Result<TResponseValue> Conflict(string error)
-    {
-        return new Result<TResponseValue>(new List<string> { error }, ResultStatus.Conflict);
-    }
-
+    public static Result<TResponseValue> Conflict(string error) => new(new List<string> { error }, ResultStatus.Conflict);
     /// <summary>
     /// Mark result as status code 422 (Unprocessable Entity)
     /// </summary>
     /// <param name="errors"> List of errors </param>
     /// <returns> Result with status code and list of errors </returns>
-    public static Result<TResponseValue> Error(IReadOnlyCollection<string> errors)
-    {
-        return new Result<TResponseValue>(errors, ResultStatus.Error);
-    }
-
+    public static Result<TResponseValue> Error(IReadOnlyCollection<string> errors) => new(errors, ResultStatus.Error);
     /// <summary>
     /// Mark result as status code 422 (Unprocessable Entity)
     /// </summary>
     /// <param name="error"> Error </param>
     /// <returns> Result with status code and error </returns>
-    public static Result<TResponseValue> Error(string error)
-    {
-        return new Result<TResponseValue>(new List<string> { error }, ResultStatus.Error);
-    }
+    public static Result<TResponseValue> Error(string error) => new(new List<string> { error }, ResultStatus.Error);
+    #endregion
 
     private Result(TResponseValue value, ResultStatus status = ResultStatus.Ok)
     {
-        Status = ResultStatus.Unknown;
-        Errors = null;
-        this._value = default;
-        this._value = value;
+        _value = value;
         Status = status;
     }
 
     private Result(IReadOnlyCollection<string> errors, ResultStatus status)
     {
-        Status = ResultStatus.Unknown;
-        Errors = null;
-        _value = default;
         Status = status;
         Errors = errors;
     }
 
     private Result(ResultStatus status)
     {
-        Status = ResultStatus.Unknown;
-        Errors = null;
-        _value = default;
         Status = status;
     }
 
+    /// <summary>
+    /// Get the value
+    /// </summary>
+    /// <returns>Value</returns>
+    /// <exception cref="AppException">
+    /// The result status does not imply a result
+    /// Either the value is missing
+    /// </exception>
     public TResponseValue GetValue()
     {
         if (!Status.IsSuccess() || _value == null)

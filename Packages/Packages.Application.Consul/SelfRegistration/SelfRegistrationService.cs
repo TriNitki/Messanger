@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Hosting;
 
 namespace Packages.Application.Consul.SelfRegistration;
@@ -14,10 +13,7 @@ internal sealed class SelfRegistrationService : IHostedService
     private readonly ILogger<SelfRegistrationService> _logger;
     private string? _registrationId;
 
-    public SelfRegistrationService(
-        IConsulClient consulClient,
-        IOptions<SelfRegistrationOptions> options,
-        ILogger<SelfRegistrationService> logger)
+    public SelfRegistrationService(IConsulClient consulClient, IOptions<SelfRegistrationOptions> options, ILogger<SelfRegistrationService> logger)
     {
         _consulClient = consulClient;
         _options = options.Value;
@@ -26,8 +22,9 @@ internal sealed class SelfRegistrationService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        var registration = SelfRegistrationService.CreateAgentServiceRegistration(_options);
+        var registration = CreateAgentServiceRegistration(_options);
         var id = registration.ID;
+
         _logger.LogTrace("Service registration [id: {ServiceName}] in Consul...", _options.ServiceName);
         var response = await _consulClient.Agent.ServiceRegister(registration, cancellationToken);
 
@@ -35,11 +32,10 @@ internal sealed class SelfRegistrationService : IHostedService
         {
             _registrationId = id;
             _logger.LogTrace("[id: {ServiceName}] service is registered in Consul.", _options.ServiceName);
+            return;
         }
-        else
-        {
-            _logger.LogError("[id: {RegistrationID}] service registration error in Consul.", id);
-        }
+
+        _logger.LogError("[id: {RegistrationID}] service registration error in Consul.", id);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -62,57 +58,50 @@ internal sealed class SelfRegistrationService : IHostedService
 
     private static AgentServiceRegistration CreateAgentServiceRegistration(SelfRegistrationOptions options)
     {
-        var str = !string.IsNullOrWhiteSpace(options.ServiceName) 
-            ? options.ApplicationUrl 
-            : throw new ConsulConfigurationException(
-                "ServiceName is not set in the configuration. Specify the option in appsettings.json or an environment variable");
+        if (string.IsNullOrWhiteSpace(options.ServiceName))
+            throw new ConsulConfigurationException(
+                "ServiceName is not specified in the configuration. Specify the option in appsettings.json or an environment variable");
 
-        if (str != null && (str.Contains('*') || str.Contains('+')))
+        if (options.ApplicationUrl is { } appUrl && (appUrl.Contains('*') || appUrl.Contains('+')))
         {
             var hostName = Dns.GetHostEntry("").HostName;
-            options.ApplicationUrl = str.Replace("*", hostName).Replace("+", hostName);
+            options.ApplicationUrl = appUrl.Replace("*", hostName).Replace("+", hostName);
         }
 
-        if (!Uri.TryCreate(options.ApplicationUrl, UriKind.Absolute, out var result))
+        if (!Uri.TryCreate(options.ApplicationUrl, UriKind.Absolute, out var uri))
             throw new ConsulConfigurationException(
                 "Configuration does not specify the ApplicationUrl on which the application is hosted. Specify the option in appsettings.json or an environment variable");
-            
-        var serviceRegistration1 = new AgentServiceRegistration();
-        var serviceRegistration2 = serviceRegistration1 ?? throw new ArgumentNullException(nameof(serviceRegistration1));
-            
-        var interpolatedStringHandler = new DefaultInterpolatedStringHandler(1, 2);
-            
-        interpolatedStringHandler.AppendFormatted(result.Authority);
-        interpolatedStringHandler.AppendLiteral("-");
-        interpolatedStringHandler.AppendFormatted(DateTime.UtcNow.Ticks);
-            
-        var stringAndClear = interpolatedStringHandler.ToStringAndClear();
-            
-        serviceRegistration2.ID = stringAndClear;
 
-        serviceRegistration1.Name = options.ServiceName;
-        serviceRegistration1.Address = result.Host;
-        serviceRegistration1.Port = result.Port;
-        serviceRegistration1.Tags =
-        [
-            "urlprefix-/" + options.ServiceName + " strip=/" + options.ServiceName
-        ];
-            
-        var serviceRegistration3 = serviceRegistration1 ?? throw new ArgumentNullException(nameof(serviceRegistration1));
-        var agentServiceCheck = new AgentServiceCheck
+        var registration = new AgentServiceRegistration
         {
-            HTTP = result.Scheme + "://" + result.Authority + "/health",
-            DeregisterCriticalServiceAfter = TimeSpan.FromHours(2.0)
+            ID = $"{uri.Authority}-{DateTime.UtcNow.Ticks}",
+            Name = options.ServiceName,
+
+            Address = uri.Host,
+            Port = uri.Port,
+            // интеграция с fabio 
+            Tags =
+            [
+                $"urlprefix-/{options.ServiceName} strip=/{options.ServiceName}"
+            ],
+            Check = new AgentServiceCheck
+            {
+                HTTP = $"{uri.Scheme}://{uri.Authority}/health",
+                DeregisterCriticalServiceAfter = TimeSpan.FromHours(2),
+                Timeout = TimeSpan.FromSeconds(options.PingTimeoutInSeconds ?? 3),
+                Interval = TimeSpan.FromSeconds(options.PingIntervalInSeconds ?? 30)
+            }
         };
+        return registration;
+    }
+}
 
-        var nullable = options.PingTimeoutInSeconds;
-        agentServiceCheck.Timeout = TimeSpan.FromSeconds(nullable ?? 3.0);
-
-        nullable = options.PingIntervalInSeconds;
-        agentServiceCheck.Interval = TimeSpan.FromSeconds(nullable ?? 30.0);
-            
-        serviceRegistration3.Check = agentServiceCheck;
-            
-        return serviceRegistration1;
+internal static class WriteResultStatusCodeExtensions
+{
+    public static bool IsOk(this WriteResult? result)
+    {
+        if (result is null)
+            return false;
+        return (int)result.StatusCode is >= 200 and < 300;
     }
 }

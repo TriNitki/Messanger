@@ -37,7 +37,7 @@ public class UserTokenProvider : IUserTokenProvider
         var password = userOptions.Value.Password;
 
         if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
-            throw new ArgumentException("Login or password for user is not set");
+            throw new ArgumentException("Login or password for user is not specified");
 
         _jwtOptions = jwtOptions.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
         _loginRequest = new(login, password);
