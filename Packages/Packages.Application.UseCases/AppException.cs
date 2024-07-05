@@ -1,4 +1,4 @@
-﻿namespace Application.UseCases;
+﻿namespace Packages.Application.UseCases;
 
 public class AppException : Exception
 {

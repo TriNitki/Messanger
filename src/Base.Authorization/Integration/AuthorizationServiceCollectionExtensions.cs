@@ -63,11 +63,11 @@ public static class AuthorizationServiceCollectionExtensions
     /// <param name="configuration"> Configuration </param>
     /// <param name="serviceName"> Service name </param>
     /// <returns> Uri address of the service </returns>
-    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.FabioUrl"/> is not set </exception>
+    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.FabioUrl"/> is not specified </exception>
     private static Uri GetServiceUri(this IConfiguration configuration, string serviceName)
     {
         if (!Uri.TryCreate(configuration[AuthEnvironmentVariables.FabioUrl], UriKind.Absolute, out var fabioUrl))
-            throw new ArgumentException($"Fabio Url is not set");
+            throw new ArgumentException("Fabio Url is not specified");
 
         return new Uri(fabioUrl, serviceName);
     }
@@ -77,13 +77,13 @@ public static class AuthorizationServiceCollectionExtensions
     /// </summary>
     /// <param name="configuration"> Configuration </param>
     /// <returns> Authorization service name </returns>
-    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.AuthorizationServiceName"/> is not set </exception>
+    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.AuthorizationServiceName"/> is not specified </exception>
     private static string GetAuthorizationServiceName(this IConfiguration configuration)
     {
         var authorizationServiceName = configuration[AuthEnvironmentVariables.AuthorizationServiceName];
 
         if (string.IsNullOrEmpty(authorizationServiceName))
-            throw new ArgumentException("Authorization service name is not set");
+            throw new ArgumentException("Authorization service name is not specified");
 
         return authorizationServiceName;
     }

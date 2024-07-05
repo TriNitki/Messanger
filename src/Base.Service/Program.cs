@@ -17,6 +17,7 @@ using Base.Authorization;
 using Base.Authorization.Permission;
 using Base.Permission.Clients;
 using Microsoft.AspNetCore.Authorization;
+using Packages.Application.RabbitMQ;
 
 namespace Base.Service;
 
@@ -92,6 +93,7 @@ public class Program
             typeof(CheckFeatureAccessQuery).Assembly
         ]));
         services.AddDataContext<DataBaseContext>(configuration);
+        services.AddEasyNetQ(configuration, [Assembly.GetExecutingAssembly()]);
 
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IRefreshTokenFamilyRepository, RefreshTokenFamilyRepository>();
@@ -120,7 +122,7 @@ public class Program
         services.Configure<SecurityOptions>(x =>
         {
             x.SecretKey = securityOptionsSection[nameof(SecurityOptions.SecretKey)] 
-                          ?? throw new ArgumentNullException(null, "Secret key is not set");
+                          ?? throw new ArgumentNullException(null, "Secret key is not specified");
 
             x.AccessTokenLifetimeInMinutes
                 = securityOptionsSection
@@ -134,7 +136,7 @@ public class Program
         services.Configure<PasswordOptions>(x =>
         {
             x.Salt = securityOptionsSection.GetSection(nameof(PasswordOptions))[nameof(PasswordOptions.Salt)]
-                     ?? throw new ArgumentNullException(null, "Password salt is not set");
+                     ?? throw new ArgumentNullException(null, "Password salt is not specified");
         });
     }
 
@@ -142,7 +144,7 @@ public class Program
     {
         var app = builder.Build();
         var appName = builder.Configuration["ServiceName"]
-                      ?? throw new ArgumentNullException(null, "Service name is not set");
+                      ?? throw new ArgumentNullException(null, "Service name is not specified");
 
         if (app.Environment.IsDevelopment())
         {

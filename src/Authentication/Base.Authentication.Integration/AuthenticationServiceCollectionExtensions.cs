@@ -24,7 +24,7 @@ public static class AuthenticationServiceCollectionExtensions
         JwtBearerEvents? jwtBearerEvents = null)
     {
         if (string.IsNullOrWhiteSpace(securityKey))
-            throw new ArgumentException("Security key not set", nameof(securityKey));
+            throw new ArgumentException("Security key is not specified", nameof(securityKey));
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opts =>
@@ -60,7 +60,7 @@ public static class AuthenticationServiceCollectionExtensions
 
             opts.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
-                Description = @"Enter access token",
+                Description = "Enter access token",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
