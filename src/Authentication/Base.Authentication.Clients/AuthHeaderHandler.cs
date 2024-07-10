@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using Base.Authentication.Clients.Abstractions;
 
 namespace Base.Authentication.Clients;
 

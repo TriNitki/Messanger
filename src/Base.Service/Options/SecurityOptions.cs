@@ -19,4 +19,9 @@ public class SecurityOptions
     /// Refresh token lifetime in minutes
     /// </summary>
     public int RefreshTokenLifetimeInMinutes { get; set; }
+
+    /// <summary>
+    /// Service access token lifetime in days
+    /// </summary>
+    public int ServiceAccessTokenLifeTimeInDays { get; set; }
 }

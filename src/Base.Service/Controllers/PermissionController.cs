@@ -1,4 +1,5 @@
-﻿using Base.Permission.UseCases;
+﻿using Base.Authorization.Permission;
+using Base.Permission.UseCases;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +27,12 @@ public class PermissionController : ControllerBase
     /// <returns> <see langword="true"/> if access is available, otherwise <see langword="false"/> </returns>
     /// <response code="200"> Success </response>
     /// <response code="400"> Invalid feature was passed </response>
+    /// <response code="403"> Insufficient access rights to the resource </response>
     [ProducesResponseType(typeof(bool), 200)]
     [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(typeof(List<string>), 403)]
     [HttpGet("feature/{featureId}/isAvailable")]
+    [Permission("FeatureIsAvailable")]
     public async Task<IActionResult> FeatureIsAvailable(string featureId, [FromQuery] string[] roles)
     {
         var result = await _mediator.Send(new CheckFeatureAccessQuery(featureId, roles));

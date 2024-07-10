@@ -19,11 +19,11 @@ public class RegistrationCommandHandler : LoginBaseHandler, IRequestHandler<Regi
         IUserRepository userRepository,
         ITokenService tokenService,
         IOptions<PasswordOptions> passwordOptions,
-        IOptions<List<string>> roles) : base(tokenService)
+        IOptions<RoleOptions> roles) : base(tokenService)
     {
         _userRepository = userRepository;
         _passwordOptions = passwordOptions.Value;
-        _defaultUserRoles = roles.Value.ToArray() ?? throw new ArgumentNullException(nameof(roles));
+        _defaultUserRoles = roles.Value.DefaultUserRoles.ToArray() ?? throw new ArgumentNullException(nameof(roles));
     }
 
     public async Task<Result<Tokens>> Handle(RegistrationCommand request, CancellationToken cancellationToken)

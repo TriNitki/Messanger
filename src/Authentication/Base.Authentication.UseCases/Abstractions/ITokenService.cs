@@ -23,6 +23,13 @@ public interface ITokenService
     Task<RefreshToken> GenerateRefreshToken(Guid userId, Guid tokenFamilyId);
 
     /// <summary>
+    /// Generate service access token
+    /// </summary>
+    /// <param name="service"> Authenticated service </param>
+    /// <returns> Access token </returns>
+    Task<string> GenerateServiceAccessToken(AuthService service);
+
+    /// <summary>
     /// Use refresh token
     /// </summary>
     /// <param name="token"> Refresh token </param>

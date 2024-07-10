@@ -1,4 +1,5 @@
 ﻿using Base.Authentication.Clients;
+using Base.Authentication.Clients.Abstractions;
 using Base.Authentication.Contracts;
 using Base.Authorization.Permission;
 using Base.Permission.Clients;
@@ -15,7 +16,7 @@ namespace Base.Authorization.Integration;
 /// </summary>
 public static class AuthorizationServiceCollectionExtensions
 {
-    public static IServiceCollection AddWhiteListBasedAuthorization(
+    public static IServiceCollection AddPermissionBasedAuthorization(
         this IServiceCollection services,
         IConfiguration configuration)
     {

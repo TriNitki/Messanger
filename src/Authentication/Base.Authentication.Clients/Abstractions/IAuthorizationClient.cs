@@ -1,7 +1,7 @@
 ﻿using Base.Authentication.Contracts;
 using Refit;
 
-namespace Base.Authentication.Clients;
+namespace Base.Authentication.Clients.Abstractions;
 
 /// <summary>
 /// Authorization client

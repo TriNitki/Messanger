@@ -1,4 +1,5 @@
-﻿using Base.Authentication.Core.Options;
+﻿using Base.Authentication.Core.Abstractions;
+using Base.Authentication.Core.Options;
 using Base.Authentication.Core.Services;
 using System.Security.Claims;
 
@@ -7,7 +8,7 @@ namespace Base.Authentication.Core;
 /// <summary>
 /// Authenticated user
 /// </summary>
-public class AuthUser
+public class AuthUser : BaseAuthClient
 {
     /// <summary>
     /// Unique id
@@ -15,29 +16,14 @@ public class AuthUser
     public Guid Id { get; }
 
     /// <summary>
-    /// Login
-    /// </summary>
-    public string Login { get; } = string.Empty;
-
-    /// <summary>
     /// Hashed password
     /// </summary>
     public string PasswordHash { get; private set; } = string.Empty;
 
     /// <summary>
-    /// Whether the user is blocked
-    /// </summary>
-    public bool IsBlocked { get; set; }
-
-    /// <summary>
     /// Email address
     /// </summary>
     public string? Email { get; set; }
-
-    /// <summary>
-    /// User roles
-    /// </summary>
-    public string[] Roles { get; set; } = Array.Empty<string>();
 
     /// <summary>
     /// New user constructor
@@ -84,11 +70,8 @@ public class AuthUser
         PasswordHash = CryptographyService.HashPassword(password, passwordOptions.Salt);
     }
 
-    /// <summary>
-    /// Get user claims
-    /// </summary>
-    /// <returns> Array of claims </returns>
-    public Claim[] GetClaims()
+    /// <inheritdoc/>>
+    public override Claim[] GetClaims()
     {
         var claims = new List<Claim>(Roles.Length + 2)
         {
@@ -97,9 +80,7 @@ public class AuthUser
         };
 
         foreach (var role in Roles)
-        {
-            claims.Add(new(ClaimTypes.Role, role));
-        }
+            claims.Add(new Claim(ClaimTypes.Role, role));
 
         return claims.ToArray();
     }

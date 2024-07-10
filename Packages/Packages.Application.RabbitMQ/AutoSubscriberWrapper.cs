@@ -33,6 +33,6 @@ internal class AutoSubscriberWrapper
             GenerateSubscriptionId = x => x.MessageType.Name.Split('.').Last()
         };
 
-        return await autoSubscriber.SubscribeAsync(this._consumers, cancellationToken).ConfigureAwait(false);
+        return await autoSubscriber.SubscribeAsync(_consumers, cancellationToken).ConfigureAwait(false);
     }
 }

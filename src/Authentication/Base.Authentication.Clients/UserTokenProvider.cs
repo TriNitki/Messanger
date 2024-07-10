@@ -1,4 +1,5 @@
-﻿using Base.Authentication.Contracts;
+﻿using Base.Authentication.Clients.Abstractions;
+using Base.Authentication.Contracts;
 using Microsoft.Extensions.Options;
 
 namespace Base.Authentication.Clients;
@@ -40,7 +41,7 @@ public class UserTokenProvider : IUserTokenProvider
             throw new ArgumentException("Login or password for user is not specified");
 
         _jwtOptions = jwtOptions.Value ?? throw new ArgumentNullException(nameof(jwtOptions));
-        _loginRequest = new(login, password);
+        _loginRequest = new LoginRequest(login, password);
         _semaphore = new SemaphoreSlim(1);
     }
 
@@ -74,7 +75,7 @@ public class UserTokenProvider : IUserTokenProvider
 
         try
         {
-            if (!_accessToken?.IsValid() ?? true) // Получен в предыдущем семафоре?
+            if (!_accessToken?.IsValid() ?? true)
             {
                 SetTokens(await client.RefreshTokens(new RefreshTokenRequest(_refreshToken!.Value)));
             }
@@ -121,7 +122,7 @@ public class UserTokenProvider : IUserTokenProvider
     }
 
     /// <summary>
-    /// Set pair of tokens
+    /// Set a pair of tokens
     /// </summary>
     /// <param name="tokens"> Pair of tokens </param>
     private void SetTokens(Tokens tokens)

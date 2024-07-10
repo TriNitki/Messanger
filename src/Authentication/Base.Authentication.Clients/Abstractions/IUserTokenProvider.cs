@@ -1,4 +1,4 @@
-﻿namespace Base.Authentication.Clients;
+﻿namespace Base.Authentication.Clients.Abstractions;
 
 /// <summary>
 /// Authorizastion token provider for user

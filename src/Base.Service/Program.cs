@@ -101,7 +101,15 @@ public class Program
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
 
-        services.Configure<List<string>>(configuration.GetRequiredSection("DefaultUserRoles"));
+        var roleOptionsSection = configuration.GetSection(nameof(RoleOptions));
+        services.Configure<RoleOptions>(x =>
+        {
+            x.DefaultUserRoles = roleOptionsSection
+                .GetValue(nameof(RoleOptions.DefaultUserRoles), new List<string>())!;
+
+            x.DefaultServiceRoles = roleOptionsSection
+                .GetValue(nameof(RoleOptions.DefaultServiceRoles), new List<string>())!;
+        });
     }
 
     private static void AddAuthorization(IServiceCollection services, IConfiguration configuration)
@@ -124,13 +132,14 @@ public class Program
             x.SecretKey = securityOptionsSection[nameof(SecurityOptions.SecretKey)] 
                           ?? throw new ArgumentNullException(null, "Secret key is not specified");
 
-            x.AccessTokenLifetimeInMinutes
-                = securityOptionsSection
-                    .GetValue(nameof(SecurityOptions.AccessTokenLifetimeInMinutes), 15);
+            x.AccessTokenLifetimeInMinutes = securityOptionsSection
+                .GetValue(nameof(SecurityOptions.AccessTokenLifetimeInMinutes), 15);
 
-            x.RefreshTokenLifetimeInMinutes
-                = securityOptionsSection
-                    .GetValue(nameof(SecurityOptions.RefreshTokenLifetimeInMinutes), 180);
+            x.RefreshTokenLifetimeInMinutes = securityOptionsSection
+                .GetValue(nameof(SecurityOptions.RefreshTokenLifetimeInMinutes), 180);
+
+            x.ServiceAccessTokenLifeTimeInDays = securityOptionsSection
+                .GetValue(nameof(SecurityOptions.ServiceAccessTokenLifeTimeInDays), 1);
         });
 
         services.Configure<PasswordOptions>(x =>
@@ -155,6 +164,7 @@ public class Program
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<DataBaseContext>();
+            await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
         }
 
