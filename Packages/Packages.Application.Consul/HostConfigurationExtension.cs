@@ -41,8 +41,7 @@ internal static class HostConfigurationExtension
                 break;
         }
 
-        builder.AddConsul(consulUri, index != -1 ? index : Index.End, cfgNodes);
-        return builder;
+        return builder.AddConsul(consulUri, index != -1 ? index : Index.End, cfgNodes);
     }
 
     /// <summary>
