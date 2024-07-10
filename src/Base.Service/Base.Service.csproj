@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Packages\Packages.Application.Consul\Packages.Application.Consul.csproj" />
     <ProjectReference Include="..\..\Packages\Packages.Application.Data.DI\Packages.Application.Data.DI.csproj" />
-    <ProjectReference Include="..\..\Packages\Packages.Application.RabbitMQ\Packages.Application.RabbitMQ.csproj" />
     <ProjectReference Include="..\Authentication\Base.Authentication.Integration\Base.Authentication.Integration.csproj" />
     <ProjectReference Include="..\Base.Authorization\Base.Authorization.csproj" />
     <ProjectReference Include="..\Base.DataAccess\Base.DataAccess.csproj" />

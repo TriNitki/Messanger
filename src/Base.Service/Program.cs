@@ -17,7 +17,6 @@ using Base.Authorization;
 using Base.Authorization.Permission;
 using Base.Permission.Clients;
 using Microsoft.AspNetCore.Authorization;
-using Packages.Application.RabbitMQ;
 
 namespace Base.Service;
 
@@ -93,7 +92,6 @@ public class Program
             typeof(CheckFeatureAccessQuery).Assembly
         ]));
         services.AddDataContext<DataBaseContext>(configuration);
-        services.AddEasyNetQ(configuration, [Assembly.GetExecutingAssembly()]);
 
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IRefreshTokenFamilyRepository, RefreshTokenFamilyRepository>();
