@@ -50,7 +50,7 @@ public class UserRepository : IUserRepository
         var entity = await _context.Users
             .AsNoTracking()
             .Include(x => x.Roles)
-            .FirstOrDefaultAsync(x => x.Login == login && x.PasswordHash == password)
+            .FirstOrDefaultAsync(x => x.Login == login && x.HashedPassword == password)
             .ConfigureAwait(false);
 
         return _mapper.Map<AuthUser?>(entity);

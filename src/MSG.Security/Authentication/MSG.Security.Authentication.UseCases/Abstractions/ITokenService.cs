@@ -1,21 +1,22 @@
 ﻿using MSG.Security.Authentication.Core;
+using MSG.Security.Authentication.Core.Abstractions;
 
 namespace MSG.Security.Authentication.UseCases.Abstractions;
 
 /// <summary>
-/// A service for working with tokens
+/// Service for working with tokens
 /// </summary>
 public interface ITokenService
 {
     /// <summary>
-    /// Generate access token
+    /// Generate new access token
     /// </summary>
-    /// <param name="user"> Authenticated user </param>
+    /// <param name="customer"> Authenticated customer </param>
     /// <returns> Access token </returns>
-    Task<string> GenerateAccessToken(AuthUser user);
+    Task<string> GenerateAccessToken(IAuthenticatedCustomer customer);
 
     /// <summary>
-    /// Generate refresh token
+    /// Generate new refresh token
     /// </summary>
     /// <param name="userId"> User id </param>
     /// <param name="tokenFamilyId"> Token family id </param>
@@ -23,16 +24,9 @@ public interface ITokenService
     Task<RefreshToken> GenerateRefreshToken(Guid userId, Guid tokenFamilyId);
 
     /// <summary>
-    /// Generate service access token
-    /// </summary>
-    /// <param name="service"> Authenticated service </param>
-    /// <returns> Access token </returns>
-    Task<string> GenerateServiceAccessToken(AuthService service);
-
-    /// <summary>
-    /// Use refresh token
+    /// Mark refresh token as used
     /// </summary>
     /// <param name="token"> Refresh token </param>
-    /// <returns> Deactivated refresh token </returns>
+    /// <returns> Used refresh token </returns>
     Task<RefreshToken?> UseRefreshToken(string token);
 }

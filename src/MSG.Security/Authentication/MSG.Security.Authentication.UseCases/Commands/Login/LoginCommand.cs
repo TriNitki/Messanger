@@ -5,7 +5,7 @@ using Packages.Application.UseCases;
 namespace MSG.Security.Authentication.UseCases.Commands.Login;
 
 /// <summary>
-/// Login command
+/// LoginUser command
 /// </summary>
 public class LoginCommand : IRequest<Result<Tokens>>
 {

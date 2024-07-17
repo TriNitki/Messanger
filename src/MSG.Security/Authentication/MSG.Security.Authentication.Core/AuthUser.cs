@@ -8,7 +8,7 @@ namespace MSG.Security.Authentication.Core;
 /// <summary>
 /// Authenticated user
 /// </summary>
-public class AuthUser : BaseAuthClient
+public class AuthUser : IAuthenticatedCustomer
 {
     /// <summary>
     /// Unique id
@@ -16,9 +16,24 @@ public class AuthUser : BaseAuthClient
     public Guid Id { get; }
 
     /// <summary>
+    /// Login
+    /// </summary>
+    public string Login { get; set; }
+
+    /// <summary>
+    /// Whether the user is blocked
+    /// </summary>
+    public bool IsBlocked { get; set; }
+
+    /// <summary>
+    /// User roles
+    /// </summary>
+    public string[] Roles { get; set; }
+
+    /// <summary>
     /// Hashed password
     /// </summary>
-    public string PasswordHash { get; private set; } = string.Empty;
+    public string HashedPassword { get; private set; } = string.Empty;
 
     /// <summary>
     /// Email address
@@ -46,15 +61,15 @@ public class AuthUser : BaseAuthClient
     /// </summary>
     /// <param name="id"> Id </param>
     /// <param name="login"> Login </param>
-    /// <param name="passwordHash"> Hashed password </param>
+    /// <param name="hashedPassword"> Hashed password </param>
     /// <param name="isBlocked"> Whether the user is blocked </param>
     /// <param name="email"> Email </param>
     /// <param name="roles"> Roles </param>
-    public AuthUser(Guid id, string login, string passwordHash, bool isBlocked, string? email, string[] roles)
+    public AuthUser(Guid id, string login, string hashedPassword, bool isBlocked, string? email, string[] roles)
     {
         Id = id;
         Login = login;
-        PasswordHash = passwordHash;
+        HashedPassword = hashedPassword;
         IsBlocked = isBlocked;
         Email = email;
         Roles = roles;
@@ -67,11 +82,14 @@ public class AuthUser : BaseAuthClient
     /// <param name="passwordOptions"> Password options </param>
     public void SetPassword(string password, PasswordOptions passwordOptions) 
     {
-        PasswordHash = CryptographyService.HashPassword(password, passwordOptions.Salt);
+        HashedPassword = CryptographyService.HashPassword(password, passwordOptions.Salt);
     }
 
-    /// <inheritdoc/>>
-    public override Claim[] GetClaims()
+    /// <summary>
+    /// Get user claims
+    /// </summary>
+    /// <returns> Array of claims </returns>
+    public Claim[] GetClaims()
     {
         var claims = new List<Claim>(Roles.Length + 2)
         {

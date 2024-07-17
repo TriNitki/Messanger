@@ -17,16 +17,16 @@ public interface IUserRepository
     /// <summary>
     /// Get user by login
     /// </summary>
-    /// <param name="login"> Login </param>
+    /// <param name="login"> LoginUser </param>
     /// <returns> User </returns>
     Task<AuthUser?> ResolveAsync(string login);
 
     /// <summary>
     /// Get user by login and password
     /// </summary>
-    /// <param name="login"> Login </param>
+    /// <param name="login"> LoginUser </param>
     /// <param name="password"> Password </param>
-    /// <returns> User </returns>
+    /// <returns> Authenticated user </returns>
     Task<AuthUser?> ResolveAsync(string login, string password);
 
     /// <summary>

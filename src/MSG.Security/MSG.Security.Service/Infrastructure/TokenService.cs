@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MSG.Security.Authentication.Core;
+using MSG.Security.Authentication.Core.Abstractions;
 using MSG.Security.Authentication.UseCases.Abstractions;
 using MSG.Security.Service.Options;
 
@@ -26,7 +27,7 @@ public class TokenService : ITokenService
     }
 
     /// <inheritdoc/>
-    public Task<string> GenerateAccessToken(AuthUser user)
+    public Task<string> GenerateAccessToken(IAuthenticatedCustomer customer)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -35,27 +36,7 @@ public class TokenService : ITokenService
         var token = new JwtSecurityToken(
             issuer: null,
             audience: null,
-            claims: user.GetClaims(),
-            notBefore: null,
-            expires: expiration,
-            signingCredentials);
-
-        var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return Task.FromResult(tokenValue);
-    }
-
-    /// <inheritdoc/>
-    public Task<string> GenerateServiceAccessToken(AuthService user)
-    {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
-        var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expiration = DateTime.UtcNow.AddDays(_options.ServiceAccessTokenLifeTimeInDays);
-
-        var token = new JwtSecurityToken(
-            issuer: null,
-            audience: null,
-            claims: user.GetClaims(),
+            claims: customer.GetClaims(),
             notBefore: null,
             expires: expiration,
             signingCredentials);

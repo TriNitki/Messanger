@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using MSG.Security.Authorization.Client;
 using MSG.Security.Authorization.Permission;
 
 namespace MSG.Security.Authorization;
@@ -51,9 +52,14 @@ public class AuthorizationPolicyProvider : IAuthorizationPolicyProvider
     /// <returns> Authorization policy  </returns>
     public async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
-        if (policyName.StartsWith(PermissionAttribute.POLICY_PREFIX))
+        if (policyName.StartsWith(PermissionAttribute.PolicyPrefix))
         {
             return _allPolicies.GetOrAdd(policyName, CreatePermissionPolicy);
+        }
+        
+        if (policyName.StartsWith(ClientAttribute.DefaultPolicyName))
+        {
+            return _allPolicies.GetOrAdd(policyName, CreateClientPolicy);
         }
 
         return await _defaultPolicyProvider.GetPolicyAsync(policyName);
@@ -62,7 +68,14 @@ public class AuthorizationPolicyProvider : IAuthorizationPolicyProvider
     private static AuthorizationPolicy CreatePermissionPolicy(string policyName)
     {
         return new AuthorizationPolicyBuilder()
-            .AddRequirements(new PermissionRequirement(policyName[PermissionAttribute.POLICY_PREFIX.Length..]))
+            .AddRequirements(new PermissionRequirement(policyName[PermissionAttribute.PolicyPrefix.Length..]))
+            .Build();
+    }
+
+    private static AuthorizationPolicy CreateClientPolicy(string policyName)
+    {
+        return new AuthorizationPolicyBuilder()
+            .AddRequirements(new ClientRequirement())
             .Build();
     }
 }

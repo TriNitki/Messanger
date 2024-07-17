@@ -1,10 +1,11 @@
-﻿using Dodo.HttpClientResiliencePolicies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MSG.Security.Authentication.Clients;
 using MSG.Security.Authentication.Clients.Abstractions;
+using MSG.Security.Authentication.Clients.Providers;
 using MSG.Security.Authentication.Contracts;
+using MSG.Security.Authorization.Client;
 using MSG.Security.Authorization.Permission;
 using MSG.Security.Permission.Clients;
 using Refit;
@@ -20,28 +21,46 @@ public static class AuthorizationServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var authorizationServiceName = configuration.GetAuthorizationServiceName();
+        var authorizationServiceUri = configuration.GetAuthorizationServiceUri();
+
+        if (string.IsNullOrEmpty(configuration[nameof(ClientOptions.ServiceName)]))
+            throw new ArgumentException("Client's name is not specified");
+
+        if (string.IsNullOrEmpty(configuration[nameof(ClientOptions.ServiceSecret)]))
+            throw new ArgumentException("Client's secret is not specified");
+
+
+        services.AddTransient<AuthHeaderHandler>();
+        services.AddSingleton<IClientTokenProvider, ClientTokenProvider>();
 
         // refit setup
         services.AddRefitClient<IPermissionClient>()
-            .ConfigureHttpClient(x => x.BaseAddress = configuration.GetServiceUri(authorizationServiceName))
-            .AddHttpMessageHandler<AuthHeaderHandler>()
-            .AddResiliencePolicies();
+            .ConfigureHttpClient(x => x.BaseAddress = configuration.GetServiceUri(authorizationServiceUri))
+            .AddHttpMessageHandler<AuthHeaderHandler>();
 
         services.AddRefitClient<IAuthorizationClient>()
-            .ConfigureHttpClient(x => x.BaseAddress = configuration.GetServiceUri(authorizationServiceName))
-            .AddResiliencePolicies();
+            .ConfigureHttpClient(x => x.BaseAddress = configuration.GetServiceUri(authorizationServiceUri));
 
 
         // Caching setup
         services.AddMemoryCache();
 
 
-        // Permission based authorization setup
+        // Policy provider
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+
+        // Permission based authorization setup
         services.AddTransient<IAuthorizationHandler, PermissionHandler>();
         services.AddTransient<IFeatureAccessProvider, FeatureAccessProvider>();
 
+        // Client credential flow authorization
+        services.AddTransient<IAuthorizationHandler, ClientHandler>();
+
+        services.Configure<ClientOptions>(x =>
+        {
+            x.ServiceName = configuration[nameof(ClientOptions.ServiceName)]!;
+            x.ServiceSecret = configuration[nameof(ClientOptions.ServiceSecret)]!;
+        });
 
         // Jwt setup
         services.Configure<JwtTokenOptions>(x =>
@@ -51,8 +70,9 @@ public static class AuthorizationServiceCollectionExtensions
         });
 
 
-        // Authorized user setup
+        // Authorized client setup
         services.AddScoped<IUserAccessor, UserAccessor>();
+        services.AddScoped<IClientAccessor, ClientAccessor>();
         services.AddHttpContextAccessor();
 
         return services;
@@ -78,14 +98,14 @@ public static class AuthorizationServiceCollectionExtensions
     /// </summary>
     /// <param name="configuration"> Configuration </param>
     /// <returns> Authorization service name </returns>
-    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.AuthorizationServiceName"/> is not specified </exception>
-    private static string GetAuthorizationServiceName(this IConfiguration configuration)
+    /// <exception cref="ArgumentException"> <see cref="AuthEnvironmentVariables.SecurityServiceUri"/> is not specified </exception>
+    private static string GetAuthorizationServiceUri(this IConfiguration configuration)
     {
-        var authorizationServiceName = configuration[AuthEnvironmentVariables.AuthorizationServiceName];
+        var authorizationServiceUri = configuration[AuthEnvironmentVariables.SecurityServiceUri];
 
-        if (string.IsNullOrEmpty(authorizationServiceName))
-            throw new ArgumentException("Authorization service name is not specified");
+        if (string.IsNullOrEmpty(authorizationServiceUri))
+            throw new ArgumentException("Authorization service Uri is not specified");
 
-        return authorizationServiceName;
+        return authorizationServiceUri;
     }
 }

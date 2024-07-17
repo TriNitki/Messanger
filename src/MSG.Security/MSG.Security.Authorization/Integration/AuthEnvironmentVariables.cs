@@ -13,5 +13,5 @@ internal static class AuthEnvironmentVariables
     /// <summary>
     /// Authorization service name
     /// </summary>
-    internal static string AuthorizationServiceName => nameof(AuthorizationServiceName);
+    internal static string SecurityServiceUri => nameof(SecurityServiceUri);
 }

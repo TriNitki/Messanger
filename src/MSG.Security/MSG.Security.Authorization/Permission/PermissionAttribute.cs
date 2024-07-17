@@ -7,10 +7,10 @@ namespace MSG.Security.Authorization.Permission;
 /// </summary>
 public class PermissionAttribute : AuthorizeAttribute
 {
-    public const string POLICY_PREFIX = "Permission.";
+    public const string PolicyPrefix = "Permission.";
 
     public PermissionAttribute(string feature)
     {
-        Policy = POLICY_PREFIX + feature;
+        Policy = PolicyPrefix + feature;
     }
 }
