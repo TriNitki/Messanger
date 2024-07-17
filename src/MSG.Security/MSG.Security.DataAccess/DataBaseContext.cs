@@ -20,6 +20,8 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
 
     internal DbSet<RefreshTokenFamily> RefreshTokenFamilies { get; set; }
 
+    internal DbSet<Client> Clients { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -49,7 +51,7 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
             },
             new Feature
             {
-                Name = "RegisterNewService",
+                Name = "RegisterNewClient",
                 Description = "Register new service"
             });
 
@@ -62,7 +64,7 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
             new RoleToFeature
             {
                 RoleId = "Admin",
-                FeatureId = "RegisterNewService"
+                FeatureId = "RegisterNewClient"
             });
 
         modelBuilder.Entity<User>().HasData(
@@ -70,7 +72,7 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
             {
                 Id = Guid.Parse("3b39ec8f-70e9-4220-99e3-c4fad04ba574"),
                 Login = "string",
-                PasswordHash = "D1884DFD78131E1088052B42F7D2632FA0FAC9D225187B559F8D1CF6B10FB8AD",
+                HashedPassword = "D1884DFD78131E1088052B42F7D2632FA0FAC9D225187B559F8D1CF6B10FB8AD",
                 IsBlocked = false
             });
 
@@ -79,6 +81,13 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
             {
                 RoleId = "Admin",
                 UserId = Guid.Parse("3b39ec8f-70e9-4220-99e3-c4fad04ba574")
+            });
+
+        modelBuilder.Entity<Client>().HasData(
+            new Client
+            {
+                Name = "messenger",
+                HashedSecret = "2194A9AE27296881A182060A2FDCE05DA88AE0E8BAD6B7B7526504744256452F"
             });
     }
 }

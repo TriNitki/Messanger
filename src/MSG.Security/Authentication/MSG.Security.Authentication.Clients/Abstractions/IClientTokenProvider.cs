@@ -3,7 +3,7 @@
 /// <summary>
 /// Authorization token provider for user
 /// </summary>
-public interface IUserTokenProvider
+public interface IClientTokenProvider
 {
     /// <summary>
     /// Get access token
@@ -17,5 +17,5 @@ public interface IUserTokenProvider
     /// </summary>
     /// <param name="client"> Authorization client </param>
     /// <returns> Access token </returns>
-    public Task<string> UpdateTokensAsync(IAuthorizationClient client);
+    public Task<string> UpdateTokenAsync(IAuthorizationClient client);
 }

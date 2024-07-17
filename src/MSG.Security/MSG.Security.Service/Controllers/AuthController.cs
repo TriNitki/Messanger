@@ -5,6 +5,7 @@ using MSG.Security.Authentication.Contracts;
 using MSG.Security.Authentication.UseCases.Commands.ChangePassword;
 using MSG.Security.Authentication.UseCases.Commands.InvalidateRefreshToken;
 using MSG.Security.Authentication.UseCases.Commands.Login;
+using MSG.Security.Authentication.UseCases.Commands.LoginClient;
 using MSG.Security.Authentication.UseCases.Commands.RefreshTokens;
 using MSG.Security.Authentication.UseCases.Commands.Registration;
 using Packages.Application.UseCases;
@@ -49,12 +50,28 @@ public class AuthController : ControllerBase
     /// <param name="request"> User data </param>
     /// <response code="200"> Success </response>
     /// <response code="400"> Passed object was not validated </response>
-    [HttpPost("login")]
+    [HttpPost("login/user")]
     [ProducesResponseType(typeof(Tokens), 200)]
     [ProducesResponseType(typeof(List<string>), 400)]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> LoginUser(LoginUserRequest request)
     {
         var result = await _mediator.Send(new LoginCommand(request.Login, request.Password));
+        return result.ToActionResult();
+    }
+
+    /// <summary>
+    /// Client authorization
+    /// </summary>
+    /// <param name="request"> Client data </param>
+    /// <response code="204"> Success </response>
+    /// <response code="400"> Passed object was not validated </response>
+    [HttpPost("login/client")]
+    [ProducesResponseType(typeof(string), 200)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    public async Task<IActionResult> LoginClient(LoginClientRequest request)
+    {
+        var result = await _mediator.Send(
+            new LoginClientCommand(request.Name, request.Secret));
         return result.ToActionResult();
     }
 

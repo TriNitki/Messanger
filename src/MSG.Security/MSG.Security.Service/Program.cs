@@ -5,6 +5,7 @@ using MSG.Security.Authentication.Integration;
 using MSG.Security.Authentication.UseCases.Abstractions;
 using MSG.Security.Authentication.UseCases.Commands.Login;
 using MSG.Security.Authorization;
+using MSG.Security.Authorization.Client;
 using MSG.Security.Authorization.Permission;
 using MSG.Security.DataAccess;
 using MSG.Security.DataAccess.Repositories;
@@ -20,7 +21,7 @@ using Packages.Application.Data.DI;
 
 namespace MSG.Security.Service;
 
-public class Program
+internal class Program
 {
     public static async Task Main(string[] args)
     {
@@ -31,7 +32,7 @@ public class Program
         try
         {
             logger.Debug("init main");
-            var builder = ConfigureApplicationBuilder(args);
+            var builder = ConfigureApp(args);
             await RunApp(builder);
         }
         catch (Exception ex)
@@ -45,7 +46,7 @@ public class Program
         }
     }
 
-    private static WebApplicationBuilder ConfigureApplicationBuilder(string[] args)
+    private static WebApplicationBuilder ConfigureApp(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Logging.ClearProviders();
@@ -96,6 +97,7 @@ public class Program
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IRefreshTokenFamilyRepository, RefreshTokenFamilyRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IPermissionRepository, PermissionRepository>();
 
@@ -104,9 +106,6 @@ public class Program
         {
             x.DefaultUserRoles = roleOptionsSection
                 .GetValue(nameof(RoleOptions.DefaultUserRoles), new List<string>())!;
-
-            x.DefaultServiceRoles = roleOptionsSection
-                .GetValue(nameof(RoleOptions.DefaultServiceRoles), new List<string>())!;
         });
     }
 
@@ -114,13 +113,19 @@ public class Program
     {
         services.AddMemoryCache();
 
-        // Permission based authorization setup
+        // Register the custom policy provider
         services.AddSingleton<IAuthorizationPolicyProvider, AuthorizationPolicyProvider>();
+
+        // Permission based authorization setup
         services.AddTransient<IAuthorizationHandler, PermissionHandler>();
         services.AddTransient<IFeatureAccessProvider, InternalFeatureAccessProvider>();
 
+        // Client credential flow authorization
+        services.AddTransient<IAuthorizationHandler, ClientHandler>();
+
         // Authorized user setup
         services.AddScoped<IUserAccessor, UserAccessor>();
+        services.AddScoped<IClientAccessor, ClientAccessor>();
         services.AddHttpContextAccessor();
 
         // JWT setup
@@ -128,7 +133,7 @@ public class Program
         services.Configure<SecurityOptions>(x =>
         {
             x.SecretKey = securityOptionsSection[nameof(SecurityOptions.SecretKey)] 
-                          ?? throw new ArgumentNullException(null, "Secret key is not specified");
+                          ?? throw new ArgumentNullException(null, "ServiceSecret key is not specified");
 
             x.AccessTokenLifetimeInMinutes = securityOptionsSection
                 .GetValue(nameof(SecurityOptions.AccessTokenLifetimeInMinutes), 15);

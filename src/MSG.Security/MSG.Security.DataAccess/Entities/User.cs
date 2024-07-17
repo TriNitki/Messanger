@@ -18,7 +18,7 @@ public class User
     /// <summary>
     /// Hashed password
     /// </summary>
-    public string PasswordHash { get; set; } = string.Empty;
+    public string HashedPassword { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether user is blocked

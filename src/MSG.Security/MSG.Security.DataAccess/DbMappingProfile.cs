@@ -15,7 +15,7 @@ public class DbMappingProfile : Profile
             .ConstructUsing(x => new AuthUser(
                 x.Id,
                 x.Login,
-                x.PasswordHash,
+                x.HashedPassword,
                 x.IsBlocked,
                 x.Email,
                 Array.Empty<string>()))
@@ -28,5 +28,12 @@ public class DbMappingProfile : Profile
                 RoleId = role,
                 UserId = x.Id
             }).ToList());
+
+        CreateMap<Client, AuthClient>()
+            .ConstructUsing(x => new AuthClient(
+                x.Name,
+                x.HashedSecret));
+
+        CreateMap<AuthClient, Client>();
     }
 }

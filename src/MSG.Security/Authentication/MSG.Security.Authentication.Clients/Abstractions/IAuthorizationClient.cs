@@ -11,16 +11,8 @@ public interface IAuthorizationClient
     /// <summary>
     /// Authorize
     /// </summary>
-    /// <param name="request"> Login request model </param>
+    /// <param name="clientRequest"> Login clientRequest model </param>
     /// <returns> Authorization tokens </returns>
-    [Post("/api/auth/login")]
-    public Task<Tokens> Login(LoginRequest request);
-
-    /// <summary>
-    /// Refresh tokens
-    /// </summary>
-    /// <param name="request"> Refresh tokens model </param>
-    /// <returns> Authorization tokens </returns>
-    [Post("/api/auth/refresh")]
-    public Task<Tokens> RefreshTokens(RefreshTokenRequest request);
+    [Post("/api/auth/login/client")]
+    public Task<ApiResponse<string?>> Login(LoginClientRequest clientRequest);
 }

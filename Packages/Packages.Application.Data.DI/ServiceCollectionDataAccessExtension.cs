@@ -29,8 +29,7 @@ public static class ServiceCollectionDataAccessExtension
         
         return services.AddDbContext<TContext>(options =>
         {
-            options.UseNpgsql(connectionString, b => 
-                b.MigrationsAssembly("Base.Service"));
+            options.UseNpgsql(connectionString);
             options.UseSnakeCaseNamingConvention();
         });
     }
