@@ -1,4 +1,6 @@
-﻿namespace MSG.Security.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MSG.Security.DataAccess.Entities;
 
 /// <summary>
 /// Role to user entity
@@ -8,6 +10,7 @@ public class RoleToUser
     /// <summary>
     /// Role id (name)
     /// </summary>
+    [MaxLength(64)]
     public string RoleId { get; set; } = string.Empty;
 
     /// <summary>

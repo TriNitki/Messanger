@@ -1,8 +1,7 @@
-﻿// ReSharper disable All
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-using MSG.Security.DataAccess.Entities;
-
-namespace Base.DataAccess.Entities;
+namespace MSG.Security.DataAccess.Entities;
 
 /// <summary>
 /// Feature
@@ -12,11 +11,13 @@ public class Feature
     /// <summary>
     /// Name
     /// </summary>
+    [MaxLength(64)]
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Description
     /// </summary>
+    [Column(TypeName = "text")]
     public string Description { get; set; } = string.Empty;
 
     /// <summary>

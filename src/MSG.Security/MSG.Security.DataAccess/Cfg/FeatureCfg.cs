@@ -1,6 +1,6 @@
-﻿using Base.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using MSG.Security.DataAccess.Entities;
 
 namespace MSG.Security.DataAccess.Cfg;
 

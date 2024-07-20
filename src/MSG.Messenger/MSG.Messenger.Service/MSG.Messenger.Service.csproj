@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\..\Packages\Packages.Application.Data.DI\Packages.Application.Data.DI.csproj" />
     <ProjectReference Include="..\..\MSG.Security\Authentication\MSG.Security.Authentication.Integration\MSG.Security.Authentication.Integration.csproj" />
     <ProjectReference Include="..\..\MSG.Security\MSG.Security.Authorization\MSG.Security.Authorization.csproj" />
+    <ProjectReference Include="..\MSG.Messenger.DataAccess\MSG.Messenger.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

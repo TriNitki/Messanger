@@ -1,4 +1,4 @@
-﻿using Base.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MSG.Security.DataAccess.Entities;
 
@@ -10,11 +10,13 @@ public class RoleToFeature
     /// <summary>
     /// Role id (name)
     /// </summary>
+    [MaxLength(64)]
     public string RoleId { get; set; } = string.Empty;
 
     /// <summary>
     /// Feature id
     /// </summary>
+    [MaxLength(64)]
     public string FeatureId { get; set; } = string.Empty;
 
     /// <summary>

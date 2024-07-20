@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Base.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using MSG.Security.Authentication.Core;
 using MSG.Security.DataAccess.Entities;

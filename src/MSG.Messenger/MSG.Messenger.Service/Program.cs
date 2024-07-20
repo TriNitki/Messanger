@@ -2,8 +2,13 @@ using NLog;
 using NLog.Web;
 using Packages.Application.Consul;
 using System.Reflection;
+using MSG.Messenger.DataAccess;
+using MSG.Messenger.DataAccess.Repositories;
+using MSG.Messenger.UseCases.Abstractions;
+using MSG.Messenger.UseCases.Commands.CreateGroupChat;
 using MSG.Security.Authentication.Integration;
 using MSG.Security.Authorization.Integration;
+using Packages.Application.Data.DI;
 
 namespace MSG.Messenger.Service;
 
@@ -62,7 +67,13 @@ internal class Program
 
     private static void ConfigureDI(IServiceCollection services, ConfigurationManager configuration)
     {
+        services.AddAutoMapper(typeof(DbMappingProfile).Assembly);
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([
+            typeof(CreateGroupChatCommand).Assembly
+        ]));
+        services.AddDataContext<DataBaseContext>(configuration);
 
+        services.AddScoped<IChatRepository, ChatRepository>();
     }
 
     private static async Task RunApp(WebApplicationBuilder builder)
@@ -76,6 +87,12 @@ internal class Program
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<DataBaseContext>();
+            await context.Database.EnsureDeletedAsync();
+            await context.Database.EnsureCreatedAsync();
         }
 
         app.UseRouting();
