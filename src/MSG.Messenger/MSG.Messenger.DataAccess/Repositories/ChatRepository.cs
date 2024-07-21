@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using MSG.Messenger.Core;
 using MSG.Messenger.DataAccess.Entities;
 using MSG.Messenger.UseCases.Abstractions;
-using System;
 
 namespace MSG.Messenger.DataAccess.Repositories;
 
@@ -46,5 +45,42 @@ public class ChatRepository : IChatRepository
         }
         
         return _mapper.Map<ChatModel>(entity);
+    }
+
+    public async Task<bool> LeaveGroupAsync(Guid userId, Guid chatId)
+    {
+        var entity = await _context.Chats
+            .Include(x => x.Members)
+            .FirstOrDefaultAsync(x => x.Id == chatId && !x.IsDirect);
+
+        if (entity is null)
+            return false;
+
+        var members = entity.Members;
+        var leaveMember = members.FirstOrDefault(x => x.UserId == userId);
+
+        if (leaveMember is null)
+            return false;
+
+        if (members.Count <= 1)
+        {
+            entity.IsDeleted = true;
+            entity.Members.Clear();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+            return true;
+        }
+
+        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin && x.UserId != userId))
+        {
+            var rndMember = members.FindAll(x => x.UserId != userId).MinBy(x => x.UserId);
+            if (rndMember is null)
+                return false;
+
+            rndMember.IsAdmin = true;
+        }
+
+        _context.ChatMembers.Remove(leaveMember);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+        return true;
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MSG.Messenger.Contracts;
 using MSG.Messenger.UseCases.Commands.CreateGroupChat;
 using MSG.Messenger.UseCases.Commands.GetOrCreateDirectChat;
+using MSG.Messenger.UseCases.Commands.LeaveGroupChat;
 using MSG.Security.Authorization;
 using Packages.Application.UseCases;
 
@@ -40,7 +41,8 @@ namespace MSG.Messenger.Service.Controllers
         [HttpDelete("{chatId:guid}/leaveGroup")]
         public async Task<IActionResult> LeaveGroup(Guid chatId)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new LeaveGroupChatCommand(_userAccessor.Id, chatId));
+            return result.ToActionResult();
         }
 
         [HttpPatch("{chatId:guid}/kickMember")]
