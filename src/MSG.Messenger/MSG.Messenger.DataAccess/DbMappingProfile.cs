@@ -19,6 +19,6 @@ public class DbMappingProfile : Profile
                 IsAdmin = member.IsAdmin
             }).ToList());
 
-        CreateMap<ChatMember, ChatMemberModel>();
+        CreateMap<ChatMember, ChatMemberModel>().ReverseMap();
     }
 }

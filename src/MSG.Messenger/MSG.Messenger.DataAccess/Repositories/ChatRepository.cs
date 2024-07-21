@@ -17,7 +17,7 @@ public class ChatRepository : IChatRepository
         _mapper = mapper;
     }
 
-    public async Task<ChatModel?> CreateAsync(ChatModel chat)
+    public async Task<ChatModel> CreateAsync(ChatModel chat)
     {
         var entity = _mapper.Map<Chat>(chat);
         await _context.Chats.AddAsync(entity).ConfigureAwait(false);
@@ -37,50 +37,40 @@ public class ChatRepository : IChatRepository
         var chat = new ChatModel($"{senderId}.{receiverId}", true, [senderId, receiverId]);
 
         if (entity is null)
-        {
-            entity = _mapper.Map<Chat>(chat);
-
-            await _context.Chats.AddAsync(entity).ConfigureAwait(false);
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-        }
+            return await CreateAsync(chat);
         
         return _mapper.Map<ChatModel>(entity);
     }
 
-    public async Task<bool> LeaveGroupAsync(Guid userId, Guid chatId)
+    public async Task<ChatModel?> GetAsync(Guid chatId, bool includeMembers = false, bool? isDirect = null)
     {
-        var entity = await _context.Chats
-            .Include(x => x.Members)
-            .FirstOrDefaultAsync(x => x.Id == chatId && !x.IsDirect);
+        var entities = _context.Chats.AsQueryable();
 
-        if (entity is null)
-            return false;
+        if (includeMembers)
+            entities = entities.Include(x => x.Members);
 
-        var members = entity.Members;
-        var leaveMember = members.FirstOrDefault(x => x.UserId == userId);
+        var chats = await entities
+            .AsNoTracking()
+            .ToListAsync()
+            .ConfigureAwait(false);
 
-        if (leaveMember is null)
-            return false;
+        if (isDirect != null)
+            chats = chats.Where(x => x.IsDirect == isDirect).ToList();
 
-        if (members.Count <= 1)
-        {
-            entity.IsDeleted = true;
-            entity.Members.Clear();
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
-        }
+        var chat = chats.FirstOrDefault(x => x.Id == chatId);
+        return _mapper.Map<ChatModel>(chat);
+    }
 
-        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin && x.UserId != userId))
-        {
-            var rndMember = members.FindAll(x => x.UserId != userId).MinBy(x => x.UserId);
-            if (rndMember is null)
-                return false;
+    public async Task MarkAsDeletedAsync(ChatModel chat, bool deleteMembers = false)
+    {
+        var entity = _mapper.Map<Chat>(chat);
 
-            rndMember.IsAdmin = true;
-        }
+        if (deleteMembers)
+            _context.ChatMembers.RemoveRange(entity.Members);
 
-        _context.ChatMembers.Remove(leaveMember);
+        entity.IsDeleted = true;
+
+        _context.Chats.Update(entity);
         await _context.SaveChangesAsync().ConfigureAwait(false);
-        return true;
     }
 }
