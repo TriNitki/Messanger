@@ -5,7 +5,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.CreateGroupChat;
 
-public class CreateGroupChatCommandHandler : IRequestHandler<CreateGroupChatCommand, Result<ChatModel>>
+public class CreateGroupChatCommandHandler : IRequestHandler<CreateGroupChatCommand, Result<ChatModelResult>>
 {
     private readonly IChatRepository _chatRepository;
 
@@ -14,13 +14,11 @@ public class CreateGroupChatCommandHandler : IRequestHandler<CreateGroupChatComm
         _chatRepository = chatRepository;
     }
 
-    public async Task<Result<ChatModel>> Handle(CreateGroupChatCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ChatModelResult>> Handle(CreateGroupChatCommand request, CancellationToken cancellationToken)
     {
         var chat = new ChatModel(request.Name, false, request.Members.ToList(), request.CreatorId);
         var result = await _chatRepository.CreateAsync(chat);
 
-        return result is not null
-            ? Result<ChatModel>.Created(result)
-            : Result<ChatModel>.Invalid("The chat has not been created");
+        return Result<ChatModelResult>.Created(result.ToResult());
     }
 }

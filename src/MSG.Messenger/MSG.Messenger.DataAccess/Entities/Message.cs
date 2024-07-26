@@ -17,8 +17,16 @@ public class Message
     /// </summary>
     public Guid ChatId { get; set; }
 
+    /// <summary>
+    /// Message content
+    /// </summary>
     [Column(TypeName = "text")]
     public string Content { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Member id who sent the message
+    /// </summary>
+    public Guid SentBy { get; set; }
 
     /// <summary>
     /// Date time when the message was sent

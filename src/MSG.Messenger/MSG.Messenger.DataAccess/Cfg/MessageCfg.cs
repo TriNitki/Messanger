@@ -9,7 +9,7 @@ internal class MessageCfg : IEntityTypeConfiguration<Message>
     public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.HasOne<Chat>()
-            .WithMany()
+            .WithMany(x => x.Messages)
             .HasForeignKey(x => x.ChatId);
     }
 }

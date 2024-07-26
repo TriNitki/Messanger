@@ -75,6 +75,7 @@ internal class Program
 
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IChatMemberRepository, ChatMemberRepository>();
+        services.AddScoped<IMessageRepository, MessageRepository>();
     }
 
     private static async Task RunApp(WebApplicationBuilder builder)

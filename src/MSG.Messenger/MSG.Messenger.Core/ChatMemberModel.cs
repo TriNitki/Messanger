@@ -11,7 +11,7 @@ public class ChatMemberModel
     /// <param name="userId"> User id </param>
     /// <param name="chatId"> Chat id </param>
     /// <param name="isAdmin"> Whether the member is admin </param>
-    public ChatMemberModel(Guid userId, Guid chatId, bool isAdmin)
+    public ChatMemberModel(Guid userId, Guid chatId, bool isAdmin = false)
     {
         UserId = userId;
         ChatId = chatId;

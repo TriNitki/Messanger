@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.CreateGroupChat;
 
-public class CreateGroupChatCommand : IRequest<Result<ChatModel>>
+public class CreateGroupChatCommand : IRequest<Result<ChatModelResult>>
 {
     public string Name { get; set; }
 

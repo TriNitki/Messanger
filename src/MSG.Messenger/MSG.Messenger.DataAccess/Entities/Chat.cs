@@ -37,4 +37,9 @@ public class Chat
     /// Chat members
     /// </summary>
     public List<ChatMember> Members { get; set; } = [];
+
+    /// <summary>
+    /// Chat messages
+    /// </summary>
+    public List<Message> Messages { get; set; } = [];
 }

@@ -17,13 +17,13 @@ public class LeaveGroupChatCommandHandler : IRequestHandler<LeaveGroupChatComman
 
     public async Task<Result<Unit>> Handle(LeaveGroupChatCommand request, CancellationToken cancellationToken)
     {
-        var chat = await _chatRepository.GetAsync(
+        var chat = await _chatRepository.GetByIdAsync(
             request.ChatId,
             includeMembers: true,
             isDirect: false);
 
         if (chat is null)
-            return Result<Unit>.Invalid("Chat was not found");
+            return Result<Unit>.Invalid("Group chat was not found");
 
         var members = chat.Members;
         var leaveMember = members.FirstOrDefault(x => x.UserId == request.UserId);

@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.GetOrCreateDirectChat;
 
-public class GetOrCreateDirectChatCommand : IRequest<Result<ChatModel>>
+public class GetOrCreateDirectChatCommand : IRequest<Result<ChatModelResult>>
 {
     public Guid Sender { get; set; }
 

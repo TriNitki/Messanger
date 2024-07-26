@@ -26,6 +26,13 @@ public class ChatRepository : IChatRepository
         return _mapper.Map<ChatModel>(entity);
     }
 
+    public async Task UpdateAsync(ChatModel chat)
+    {
+        var entity = _mapper.Map<Chat>(chat);
+        _context.Chats.Update(entity);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
+    }
+
     public async Task<ChatModel> GetOrCreateDirectAsync(Guid senderId, Guid receiverId)
     {
         var entity = await _context.Chats.Include(x => x.Members)
@@ -42,7 +49,7 @@ public class ChatRepository : IChatRepository
         return _mapper.Map<ChatModel>(entity);
     }
 
-    public async Task<ChatModel?> GetAsync(Guid chatId, bool includeMembers = false, bool? isDirect = null)
+    public async Task<ChatModel?> GetByIdAsync(Guid chatId, bool includeMembers = false, bool ? isDirect = null)
     {
         var entities = _context.Chats.AsQueryable();
 
@@ -59,6 +66,31 @@ public class ChatRepository : IChatRepository
 
         var chat = chats.FirstOrDefault(x => x.Id == chatId);
         return _mapper.Map<ChatModel>(chat);
+    }
+
+    public async Task<List<ChatModel?>> GetByUserIdAsync(Guid memberId, int? fromChat = null, int? toChat = null)
+    {
+        var entities = _context.Chats
+            .Include(x => x.Members)
+            .Include(x => x.Messages)
+            .Where(x => x.Members.Any(y => y.UserId == memberId))
+            .OrderByDescending(x => x.Messages.OrderByDescending(y => y.SendingDt).FirstOrDefault())
+            .AsQueryable();
+
+        if (fromChat is not null)
+            entities = entities.Skip((int)fromChat);
+
+        if (toChat is not null)
+        {
+            if (toChat <= fromChat)
+                return [];
+
+            entities = entities.Take((int)toChat - (fromChat ?? 0));
+        }
+
+        var chats = await entities.ToListAsync();
+
+        return _mapper.Map<List<ChatModel?>>(chats);
     }
 
     public async Task MarkAsDeletedAsync(ChatModel chat, bool deleteMembers = false)

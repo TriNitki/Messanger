@@ -1,32 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using MSG.Messenger.Contracts;
+using MSG.Messenger.UseCases.Commands.DeleteMessage;
+using MSG.Messenger.UseCases.Commands.RedactMessage;
+using MSG.Messenger.UseCases.Commands.SendMessage;
+using MSG.Security.Authorization;
+using Packages.Application.UseCases;
 
 namespace MSG.Messenger.Service.Controllers;
 
-[Route("api/chat/{chatId:guid}/messages")]
+[Route("api/chats/")]
 [ApiController]
 public class MessageController : ControllerBase
 {
+    private readonly IMediator _mediator;
+    private readonly IUserAccessor _userAccessor;
 
-    public MessageController()
+    public MessageController(IMediator mediator, IUserAccessor userAccessor)
     {
-        
+        _mediator = mediator;
+        _userAccessor = userAccessor;
     }
 
-    [HttpPost("send")]
-    public async Task<IActionResult> Send(Guid chatId)
+    [HttpPost("{chatId:guid})")]
+    public async Task<IActionResult> Send(Guid chatId, SendMessageRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _mediator.Send(new SendMessageCommand(chatId, _userAccessor.Id, request.Message));
+        return result.ToActionResult();
     }
 
-    [HttpDelete("delete/{messageId:guid}")]
-    public async Task<IActionResult> Delete(Guid chatId, Guid messageId) 
+    [HttpDelete("messages/{messageId:guid}")]
+    public async Task<IActionResult> Delete(Guid messageId) 
     {
-        throw new NotImplementedException();
+        var result = await _mediator.Send(new DeleteMessageCommand(messageId, _userAccessor.Id));
+        return result.ToActionResult();
     }
 
-    [HttpPatch("redact/{messageId:guid}")]
-    public async Task<IActionResult> Redact(Guid chatId, Guid messageId)
+    [HttpPatch("messages/{messageId:guid}")]
+    public async Task<IActionResult> Redact(Guid messageId, RedactMessageRequest request)
     {
-        throw new NotImplementedException();
+        var result = await _mediator.Send(new RedactMessageCommand(messageId, _userAccessor.Id, request.NewContent));
+        return result.ToActionResult();
     }
 }

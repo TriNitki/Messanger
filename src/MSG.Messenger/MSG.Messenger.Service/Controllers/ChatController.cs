@@ -1,16 +1,22 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSG.Messenger.Contracts;
+using MSG.Messenger.DataAccess.Entities;
+using MSG.Messenger.UseCases.Commands.AddMember;
 using MSG.Messenger.UseCases.Commands.CreateGroupChat;
+using MSG.Messenger.UseCases.Commands.EditAdmin;
 using MSG.Messenger.UseCases.Commands.GetOrCreateDirectChat;
+using MSG.Messenger.UseCases.Commands.KickMember;
 using MSG.Messenger.UseCases.Commands.LeaveGroupChat;
+using MSG.Messenger.UseCases.Commands.RenameChat;
+using MSG.Messenger.UseCases.Queries.GetChat;
+using MSG.Messenger.UseCases.Queries.GetChats;
 using MSG.Security.Authorization;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.Service.Controllers
 {
-    [Route("api/chat")]
+    [Route("api/chats")]
     [ApiController]
     public class ChatController : ControllerBase
     {
@@ -45,34 +51,46 @@ namespace MSG.Messenger.Service.Controllers
             return result.ToActionResult();
         }
 
-        [HttpPatch("{chatId:guid}/kickMember")]
-        public async Task<IActionResult> KickMember(Guid chatId)
+        [HttpDelete("{chatId:guid}/members/{memberId:guid}")]
+        public async Task<IActionResult> KickMember(Guid chatId, Guid memberId)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new KickMemberCommand(chatId, _userAccessor.Id, memberId));
+            return result.ToActionResult();
         }
 
-        [HttpPatch("{chatId:guid}/addMember")]
-        public async Task<IActionResult> AddMember(Guid chatId)
+        [HttpPost("{chatId:guid}/members")]
+        public async Task<IActionResult> AddMember(Guid chatId, AddMemberRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new AddMemberCommand(chatId, _userAccessor.Id, request.MemberId));
+            return result.ToActionResult();
         }
 
-        [HttpPatch("{chatId:guid}/rename")]
-        public async Task<IActionResult> Rename(Guid chatId)
+        [HttpPatch("{chatId:guid}")]
+        public async Task<IActionResult> Rename(Guid chatId, RenameChatRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new RenameChatCommand(chatId, _userAccessor.Id, request.Name));
+            return result.ToActionResult();
         }
 
         [HttpPatch("{chatId:guid}/editAdmin/{memberId:guid}")]
-        public async Task<IActionResult> EditAdmin(Guid chatId, Guid memberId)
+        public async Task<IActionResult> EditAdmin(Guid chatId, Guid memberId, EditAdminRequest request)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new EditAdminCommand(chatId, _userAccessor.Id, memberId, request.IsAdmin));
+            return result.ToActionResult();
         }
 
         [HttpGet("{chatId:guid}")]
-        public async Task<IActionResult> GetChat(Guid chatId)
+        public async Task<IActionResult> GetChat(Guid chatId, [FromQuery] uint fromMessage = 0, [FromQuery] uint toMessage = 25)
         {
-            throw new NotImplementedException();
+            var result = await _mediator.Send(new GetChatQuery(chatId, _userAccessor.Id, (int)fromMessage, (int)toMessage));
+            return result.ToActionResult();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChats([FromQuery] uint fromChat = 0, [FromQuery] uint toChat = 25)
+        {
+            var result = await _mediator.Send(new GetChatsQuery(_userAccessor.Id, (int)fromChat, (int)toChat));
+            return result.ToActionResult();
         }
     }
 }
