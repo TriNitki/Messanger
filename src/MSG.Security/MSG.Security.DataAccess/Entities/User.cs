@@ -1,4 +1,6 @@
-﻿namespace MSG.Security.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MSG.Security.DataAccess.Entities;
 
 /// <summary>
 /// User
@@ -6,18 +8,20 @@
 public class User
 {
     /// <summary>
-    /// Id
+    /// User's id
     /// </summary>
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Login
+    /// User's login
     /// </summary>
+    [MaxLength(64)]
     public string Login { get; set; } = string.Empty;
 
     /// <summary>
-    /// Hashed password
+    /// User's hashed password
     /// </summary>
+    [MinLength(64), MaxLength(64)]
     public string HashedPassword { get; set; } = string.Empty;
 
     /// <summary>
@@ -26,12 +30,13 @@ public class User
     public bool IsBlocked { get; set; }
 
     /// <summary>
-    /// Email
+    /// User's email
     /// </summary>
+    [MaxLength(64)]
     public string? Email { get; set; }
 
     /// <summary>
-    /// Roles
+    /// User's roles
     /// </summary>
     public List<RoleToUser> Roles { get; set; } = [];
 }

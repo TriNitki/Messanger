@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MSG.Security.Authorization.Client;
 using MSG.Security.Permission.UseCases;

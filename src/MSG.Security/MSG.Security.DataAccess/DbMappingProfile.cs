@@ -23,7 +23,7 @@ public class DbMappingProfile : Profile
 
         CreateMap<AuthUser, User>()
             .ForMember(x => x.Roles, x => x.Ignore())
-            .AfterMap((x, y) => y.Roles = x.Roles.Select(role => new RoleToUser()
+            .AfterMap((x, y) => y.Roles = x.Roles.Select(role => new RoleToUser
             {
                 RoleId = role,
                 UserId = x.Id

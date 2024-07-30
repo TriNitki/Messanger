@@ -1,4 +1,6 @@
-﻿namespace MSG.Security.DataAccess.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MSG.Security.DataAccess.Entities;
 
 /// <summary>
 /// Client
@@ -6,12 +8,14 @@
 public class Client
 {
     /// <summary>
-    /// ServiceName
+    /// Client name
     /// </summary>
-    public string Name { get; set; }
+    [MaxLength(64)]
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Hashed secret
     /// </summary>
-    public string HashedSecret { get; set; }
+    [MinLength(64), MaxLength(64)]
+    public string HashedSecret { get; set; } = string.Empty;
 }
