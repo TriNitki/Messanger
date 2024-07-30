@@ -68,7 +68,7 @@ public class ChatRepository : IChatRepository
         return _mapper.Map<ChatModel>(chat);
     }
 
-    public async Task<List<ChatModel?>> GetByUserIdAsync(Guid memberId, int? fromChat = null, int? toChat = null)
+    public async Task<List<ChatModel>> GetByUserIdAsync(Guid memberId, int? fromChat = null, int? toChat = null)
     {
         var entities = _context.Chats
             .Include(x => x.Members)
@@ -90,7 +90,7 @@ public class ChatRepository : IChatRepository
 
         var chats = await entities.ToListAsync();
 
-        return _mapper.Map<List<ChatModel?>>(chats);
+        return _mapper.Map<List<ChatModel>>(chats);
     }
 
     public async Task MarkAsDeletedAsync(ChatModel chat, bool deleteMembers = false)

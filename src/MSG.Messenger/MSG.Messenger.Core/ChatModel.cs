@@ -19,8 +19,16 @@ public class ChatModel
         IsDirect = isDirect;
         IsDeleted = false;
         Members = members;
+        Messages = [];
     }
 
+    /// <summary>
+    /// New chat constructor
+    /// </summary>
+    /// <param name="name"> Chat name </param>
+    /// <param name="isDirect"> Whether the chat is direct </param>
+    /// <param name="members"> List of member ids </param>
+    /// <param name="creatorId"> Creator id </param>
     public ChatModel(string name, bool isDirect, List<Guid> members, Guid? creatorId = null)
     {
         Id = Guid.NewGuid();
@@ -28,7 +36,8 @@ public class ChatModel
         CreationDt = DateTime.UtcNow;
         IsDirect = isDirect;
         IsDeleted = false;
-        Members = members.Select(userId => new ChatMemberModel(userId, Id, false)).ToList();
+        Members = members.Select(userId => new ChatMemberModel(userId, Id)).ToList();
+        Messages = [];
 
         if (creatorId != null)
             Members.ForEach(x => x.IsAdmin = x.UserId == creatorId);
@@ -56,6 +65,10 @@ public class ChatModel
         Messages = messages;
     }
 
+    /// <summary>
+    /// Retrieves an object without repeating data
+    /// </summary>
+    /// <returns> Object without repeating data </returns>
     public ChatModelResult ToResult()
     {
         return new ChatModelResult(

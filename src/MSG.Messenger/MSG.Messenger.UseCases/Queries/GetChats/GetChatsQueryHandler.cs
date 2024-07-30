@@ -16,6 +16,6 @@ public class GetChatsQueryHandler : IRequestHandler<GetChatsQuery, Result<List<G
     public async Task<Result<List<GetChatsResponse.Chat>>> Handle(GetChatsQuery request, CancellationToken cancellationToken)
     {
         var chats = await _chatRepository.GetByUserIdAsync(request.UserId);
-        return Result<List<GetChatsResponse.Chat>>.Success(new GetChatsResponse(chats!).Result);
+        return Result<List<GetChatsResponse.Chat>>.Success(new GetChatsResponse(chats).Result);
     }
 }
