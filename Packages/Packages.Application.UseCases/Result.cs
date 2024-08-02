@@ -124,4 +124,13 @@ public readonly struct Result<TResponseValue>
 
         return _value;
     }
+
+    /// <summary>
+    /// Tries to get the value or returns the default value
+    /// </summary>
+    /// <returns> Value or default value </returns>
+    public TResponseValue? GetValueOrDefault()
+    {
+        return _value;
+    }
 }

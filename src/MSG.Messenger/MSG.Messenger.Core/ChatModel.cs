@@ -11,7 +11,8 @@ public class ChatModel
     /// <param name="name"> Chat name </param>
     /// <param name="isDirect"> Whether the chat is direct (or group) </param>
     /// <param name="members"> Chat members </param>
-    public ChatModel(string name, bool isDirect, List<ChatMemberModel> members)
+    /// <param name="creatorId"> Creator id </param>
+    public ChatModel(string name, bool isDirect, List<ChatMemberModel> members, Guid creatorId)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -19,6 +20,7 @@ public class ChatModel
         IsDirect = isDirect;
         IsDeleted = false;
         Members = members;
+        CreatorId = creatorId;
         Messages = [];
     }
 
@@ -37,6 +39,7 @@ public class ChatModel
         IsDirect = isDirect;
         IsDeleted = false;
         Members = members.Select(userId => new ChatMemberModel(userId, Id)).ToList();
+        CreatorId = creatorId;
         Messages = [];
 
         if (creatorId != null)
@@ -47,16 +50,18 @@ public class ChatModel
     /// Existing chat constructor
     /// </summary>
     /// <param name="id"> Chat id </param>
+    /// <param name="creatorId"> Creator id </param>
     /// <param name="name"> Chat name </param>
     /// <param name="creationDt"> Creation date time of the chat </param>
     /// <param name="isDeleted"> Whether the chat is deleted </param>
     /// <param name="isDirect"> Whether the chat is direct (or group) </param>
     /// <param name="members"> Chat members </param>
     /// <param name="messages"> Chat messages </param>
-    public ChatModel(Guid id, string name, DateTime creationDt, bool isDeleted, bool isDirect,
+    public ChatModel(Guid id, Guid creatorId, string name, DateTime creationDt, bool isDeleted, bool isDirect,
         List<ChatMemberModel> members, List<MessageModel> messages)
     {
         Id = id;
+        CreatorId = creatorId;
         Name = name;
         CreationDt = creationDt;
         IsDeleted = isDeleted;
@@ -72,7 +77,7 @@ public class ChatModel
     public ChatModelResult ToResult()
     {
         return new ChatModelResult(
-            Id, Name, CreationDt, IsDeleted, IsDirect,
+            Id, CreatorId, Name, CreationDt, IsDeleted, IsDirect,
             Members.Select(x => 
                 new ChatModelResultMember(x.UserId, x.IsAdmin)).ToList(),
             Messages.Select(x =>
@@ -83,6 +88,11 @@ public class ChatModel
     /// Chat id
     /// </summary>
     public Guid Id { get; }
+
+    /// <summary>
+    /// Creator id
+    /// </summary>
+    public Guid? CreatorId { get; }
 
     /// <summary>
     /// Chat name
@@ -116,7 +126,7 @@ public class ChatModel
 }
 
 public record ChatModelResult(
-    Guid Id, string Name, DateTime CreationDt, bool IsDeleted, bool IsDirect, List<ChatModelResultMember> Members, List<ChatModelResultMessage> Messages);
+    Guid Id, Guid? CreatorId, string Name, DateTime CreationDt, bool IsDeleted, bool IsDirect, List<ChatModelResultMember> Members, List<ChatModelResultMessage> Messages);
 
 public record ChatModelResultMember(Guid UserId, bool IsAdmin);
 

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MSG.Messenger.UseCases\MSG.Messenger.UseCases.csproj" />
+    <ProjectReference Include="..\MSG.Messenger.Observer\MSG.Messenger.Observer.csproj" />
   </ItemGroup>
 
 </Project>

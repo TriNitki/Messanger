@@ -13,6 +13,11 @@ public class Chat
     public Guid Id { get; set; }
 
     /// <summary>
+    /// Creator id
+    /// </summary>
+    public Guid CreatorId { get; set; }
+
+    /// <summary>
     /// Chat name
     /// </summary>
     [MaxLength(128)]

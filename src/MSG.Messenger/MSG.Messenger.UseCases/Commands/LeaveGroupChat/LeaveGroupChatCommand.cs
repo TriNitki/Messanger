@@ -3,7 +3,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.LeaveGroupChat;
 
-public class LeaveGroupChatCommand : IRequest<Result<Unit>>
+public class LeaveGroupChatCommand : IRequest<Result<LeaveGroupChatResult>>
 {
     public Guid UserId { get; set; }
 
