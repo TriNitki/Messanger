@@ -12,7 +12,7 @@ public class DeleteMessageEventHandler(IHubContext<MessengerHub, IMessengerClien
     public override async Task HandleEvent(DeleteMessageEvent notification, CancellationToken cancellationToken)
     {
         await MessengerHubContext.Clients
-            .Group(notification.Message.ChatId.ToString())
+            .Group(notification.Message!.ChatId.ToString())
             .DeletedExistingMessage(notification.Message);
     }
 }

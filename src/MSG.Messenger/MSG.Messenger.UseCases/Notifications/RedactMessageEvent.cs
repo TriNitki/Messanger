@@ -1,12 +1,12 @@
-﻿using MediatR;
-using MSG.Messenger.Core;
+﻿using MSG.Messenger.Core;
+using MSG.Messenger.UseCases.Notifications.Abstractions;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Notifications;
 
 public class RedactMessageEvent : IBaseEvent
 {
-    public MessageModel Message { get; set; }
+    public MessageModel? Message { get; set; }
 
     public bool IsSuccess { get; set; }
 
@@ -16,7 +16,7 @@ public class RedactMessageEvent : IBaseEvent
 
     public RedactMessageEvent(Result<MessageModel> result, string callerConnectionId)
     {
-        Message = result.GetValue();
+        Message = result.GetValueOrDefault();
         IsSuccess = result.IsSuccess;
         Errors = result.Errors;
         CallerConnectionId = callerConnectionId;

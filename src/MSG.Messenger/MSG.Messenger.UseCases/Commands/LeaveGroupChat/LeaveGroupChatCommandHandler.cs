@@ -34,11 +34,13 @@ public class LeaveGroupChatCommandHandler : IRequestHandler<LeaveGroupChatComman
         if (members.Count <= 1)
         {
             await _chatRepository.MarkAsDeletedAsync(chat, true);
-            return Result<LeaveGroupChatResult>.Success(new LeaveGroupChatResult(leaveMember.UserId));
+            return Result<LeaveGroupChatResult>.Success(new LeaveGroupChatResult(chat.IgnoreMembers().ToResult()));
         }
 
+        await _chatMemberRepository.DeleteMemberAsync(leaveMember);
+
         Guid? newAdminId = null;
-        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin && x.UserId != request.UserId))
+        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin))
         {
             var rndMember = members.FindAll(x => x.UserId != request.UserId).MinBy(x => x.UserId);
 
@@ -50,11 +52,7 @@ public class LeaveGroupChatCommandHandler : IRequestHandler<LeaveGroupChatComman
             newAdminId = rndMember.UserId;
         }
 
-        var otherMembers = members.Where(
-            x => x.UserId != request.UserId || x.UserId != newAdminId)
-            .Select(x => x.UserId).ToList();
-
-        await _chatMemberRepository.DeleteMemberAsync(leaveMember);
-        return Result<LeaveGroupChatResult>.Success(new LeaveGroupChatResult(leaveMember.UserId, otherMembers, newAdminId));
+        return Result<LeaveGroupChatResult>.Success(new LeaveGroupChatResult(
+            chat.IgnoreMembers().ToResult(), newAdminId));
     }
 }

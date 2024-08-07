@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace MSG.Messenger.UseCases.Notifications;
+namespace MSG.Messenger.UseCases.Notifications.Abstractions;
 
 public interface IBaseEvent : INotification
 {

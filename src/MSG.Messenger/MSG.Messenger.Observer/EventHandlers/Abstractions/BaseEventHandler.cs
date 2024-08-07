@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using MSG.Messenger.Observer.Hubs.Clients;
 using MSG.Messenger.Observer.Hubs;
-using MSG.Messenger.UseCases.Notifications;
+using MSG.Messenger.UseCases.Notifications.Abstractions;
 
 namespace MSG.Messenger.Observer.EventHandlers.Abstractions;
 

@@ -7,7 +7,19 @@ namespace MSG.Messenger.Observer.Hubs.Clients;
 /// </summary>
 public interface IMessengerClient
 {
-    Task CreatedGroupChat(ChatModelResult chat);
+    Task CreatedChat(ChatModelResult chat);
+
+    Task MemberLeftGroupChat(ChatModelResult chat, Guid memberId);
+
+    Task MemberKickedFromGroupChat(ChatModelResult chat, Guid adminId, Guid kickedMemberId);
+
+    Task NewGroupChatMember(ChatModelResult chat, Guid memberId);
+
+    Task MemberAdminPromotion(ChatModelResult chat, Guid memberId);
+
+    Task MemberAdminDemotion(ChatModelResult chat, Guid memberId);
+
+    Task RenamedGroupChat(ChatModelResult chat);
 
     Task ReceivedNewMessage(MessageModel message);
 

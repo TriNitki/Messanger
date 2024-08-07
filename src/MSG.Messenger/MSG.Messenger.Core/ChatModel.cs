@@ -84,6 +84,20 @@ public class ChatModel
                 new ChatModelResultMessage(x.Id, x.Content, x.SentBy, x.SendingDt, x.IsRedacted, x.IsDeleted)).ToList());
     }
 
+    public ChatModel IgnoreMembers()
+    {
+        var copy = Clone();
+        copy.Members = [];
+        return copy;
+    }
+
+    public ChatModel IgnoreMessages()
+    {
+        var copy = Clone();
+        copy.Messages = [];
+        return copy;
+    }
+
     /// <summary>
     /// Chat id
     /// </summary>
@@ -117,12 +131,14 @@ public class ChatModel
     /// <summary>
     /// List of chat members
     /// </summary>
-    public List<ChatMemberModel> Members { get; }
+    public List<ChatMemberModel> Members { get; set; }
 
     /// <summary>
     /// List of messages
     /// </summary>
     public List<MessageModel> Messages { get; set; }
+
+    private ChatModel Clone() => (ChatModel)MemberwiseClone();
 }
 
 public record ChatModelResult(

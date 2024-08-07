@@ -14,10 +14,10 @@ public class CreateChatEventHandler(IHubContext<MessengerHub, IMessengerClient> 
         foreach (var receiverConnectionId in notification.ReceiverConnectionIds)
         {
             await MessengerHubContext.Groups.AddToGroupAsync(receiverConnectionId,
-                notification.Chat.Id.ToString(), cancellationToken);
+                notification.Chat!.Id.ToString(), cancellationToken);
         }
 
-        await MessengerHubContext.Clients.Group(notification.Chat.Id.ToString())
-            .CreatedGroupChat(notification.Chat);
+        await MessengerHubContext.Clients.Group(notification.Chat!.Id.ToString())
+            .CreatedChat(notification.Chat);
     }
 }

@@ -9,8 +9,23 @@ namespace MSG.Messenger.Observer.EventHandlers;
 public class LeaveGroupChatEventHandler(IHubContext<MessengerHub, IMessengerClient> messengerHubContext)
     : BaseEventHandler<LeaveGroupChatEvent>(messengerHubContext)
 {
-    public override Task HandleEvent(LeaveGroupChatEvent notification, CancellationToken cancellationToken)
+    public override async Task HandleEvent(LeaveGroupChatEvent notification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var groupName = notification.LeavingChat!.Id.ToString();
+
+        foreach (var leavingConnections in notification.LeaveMemberConnections!)
+        {
+            await MessengerHubContext.Groups.RemoveFromGroupAsync(
+                leavingConnections, groupName, cancellationToken);
+        }
+
+        await MessengerHubContext.Clients.Group(groupName)
+            .MemberLeftGroupChat(notification.LeavingChat!, (Guid)notification.LeavingMemberId!);
+
+        if (notification.NewAdminId != null)
+        {
+            await MessengerHubContext.Clients.Group(groupName)
+                .MemberAdminPromotion(notification.LeavingChat!, (Guid)notification.NewAdminId);
+        }
     }
 }

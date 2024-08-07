@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.AddMember;
 
-public class AddMemberCommand : IRequest<Result<ChatMemberModel>>
+public class AddMemberCommand : IRequest<Result<ChatModelResult>>
 {
     public Guid AdminId { get; set; }
 

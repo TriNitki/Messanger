@@ -1,3 +1,5 @@
-﻿namespace MSG.Messenger.UseCases.Commands.LeaveGroupChat;
+﻿using MSG.Messenger.Core;
 
-public record LeaveGroupChatResult(Guid LeaveMemberId, List<Guid>? OtherMemberIds = null, Guid? NewAdminId = null);
+namespace MSG.Messenger.UseCases.Commands.LeaveGroupChat;
+
+public record LeaveGroupChatResult(ChatModelResult LeavingChat, Guid? NewAdminId = null);

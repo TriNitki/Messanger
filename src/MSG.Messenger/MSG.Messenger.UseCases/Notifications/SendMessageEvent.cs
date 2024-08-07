@@ -1,4 +1,5 @@
 ﻿using MSG.Messenger.Core;
+using MSG.Messenger.UseCases.Notifications.Abstractions;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Notifications;

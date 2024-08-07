@@ -1,15 +1,17 @@
-﻿using MSG.Messenger.UseCases.Commands.LeaveGroupChat;
+﻿using MSG.Messenger.Core;
+using MSG.Messenger.UseCases.Commands.LeaveGroupChat;
+using MSG.Messenger.UseCases.Notifications.Abstractions;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Notifications;
 
 public class LeaveGroupChatEvent : IBaseEvent
 {
-    public HashSet<string> LeaveMemberConnections { get; set; }
+    public ChatModelResult? LeavingChat { get; set; }
 
-    public HashSet<string>? NewAdminConnections { get; set; }
+    public Guid? LeavingMemberId { get; set; }
 
-    public HashSet<string>? OtherMemberConnections { get; set; }
+    public Guid? NewAdminId { get; set; }
 
     public bool IsSuccess { get; set; }
 
@@ -17,16 +19,21 @@ public class LeaveGroupChatEvent : IBaseEvent
 
     public string CallerConnectionId { get; set; }
 
-    public LeaveGroupChatEvent(
-        Result<LeaveGroupChatResult> result, 
-        HashSet<string> leaveMemberConnections, 
-        HashSet<string>? newAdminConnections, 
-        HashSet<string>? otherMemberConnections,
-        string callerConnectionId
-        )
+    public HashSet<string>? LeaveMemberConnections { get; set; }
+
+    public LeaveGroupChatEvent(Result<LeaveGroupChatResult> result, string callerConnectionId, Guid leavingMemberId, HashSet<string>? leaveMemberConnections)
     {
         IsSuccess = result.IsSuccess;
         Errors = result.Errors;
         CallerConnectionId = callerConnectionId;
+        LeaveMemberConnections = leaveMemberConnections;
+        LeavingMemberId = leavingMemberId;
+
+        if (IsSuccess)
+        {
+            var valueResult = result.GetValueOrDefault()!;
+            LeavingChat = valueResult.LeavingChat;
+            NewAdminId = valueResult.NewAdminId;
+        }
     }
 }

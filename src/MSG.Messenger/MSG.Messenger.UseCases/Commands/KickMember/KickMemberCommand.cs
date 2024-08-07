@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using MSG.Messenger.Core;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.KickMember;
 
-public class KickMemberCommand : IRequest<Result<Unit>>
+public class KickMemberCommand : IRequest<Result<ChatModelResult>>
 {
     public Guid ChatId { get; set; }
 

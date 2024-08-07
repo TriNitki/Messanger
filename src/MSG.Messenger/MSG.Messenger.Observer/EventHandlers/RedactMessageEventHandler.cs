@@ -12,7 +12,7 @@ public class RedactMessageEventHandler(IHubContext<MessengerHub, IMessengerClien
     public override async Task HandleEvent(RedactMessageEvent notification, CancellationToken cancellationToken)
     {
         await MessengerHubContext.Clients
-            .Group(notification.Message.ChatId.ToString())
+            .Group(notification.Message!.ChatId.ToString())
             .RedactedExistingMessage(notification.Message);
     }
 }

@@ -3,11 +3,15 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using MSG.Messenger.Observer.Hubs.Clients;
+using MSG.Messenger.UseCases.Commands.AddMember;
 using MSG.Messenger.UseCases.Commands.CreateGroupChat;
 using MSG.Messenger.UseCases.Commands.DeleteMessage;
+using MSG.Messenger.UseCases.Commands.EditAdmin;
 using MSG.Messenger.UseCases.Commands.GetOrCreateDirectChat;
+using MSG.Messenger.UseCases.Commands.KickMember;
 using MSG.Messenger.UseCases.Commands.LeaveGroupChat;
 using MSG.Messenger.UseCases.Commands.RedactMessage;
+using MSG.Messenger.UseCases.Commands.RenameChat;
 using MSG.Messenger.UseCases.Commands.SendMessage;
 using MSG.Messenger.UseCases.Notifications;
 using MSG.Security.Authorization;
@@ -53,6 +57,7 @@ public class MessengerHub : Hub<IMessengerClient>
         return Task.CompletedTask;
     }
 
+    #region Chats
     public async Task CreateGroupChat(string name, HashSet<Guid> members)
     {
         members.Add(_userAccessor.Id);
@@ -75,23 +80,43 @@ public class MessengerHub : Hub<IMessengerClient>
         var result = await _mediator.Send(new LeaveGroupChatCommand(_userAccessor.Id, chatId));
         var leaveMemberConnections = GetUserConnections(_userAccessor.Id);
 
-        HashSet<string>? newAdminConnections = null;
-        HashSet<string>? otherMemberConnections = null;
-
-        if (result.IsSuccess)
-        {
-            var value = result.GetValueOrDefault()!;
-            if (value.OtherMemberIds is not null)
-                otherMemberConnections = GetUserConnections(value.OtherMemberIds);
-
-            if (value.NewAdminId is not null)
-                newAdminConnections = GetUserConnections((Guid)value.NewAdminId);
-        }
-
         await _mediator.Publish(new LeaveGroupChatEvent(
-            result, leaveMemberConnections, newAdminConnections, otherMemberConnections, Context.ConnectionId));
+            result, Context.ConnectionId, _userAccessor.Id, leaveMemberConnections));
     }
 
+    public async Task KickGroupChatMember(Guid chatId, Guid memberId)
+    {
+        var result = await _mediator.Send(new KickMemberCommand(chatId, _userAccessor.Id, memberId));
+        var kickingMemberConnections = GetUserConnections(memberId);
+
+        await _mediator.Publish(
+            new KickGroupChatMemberEvent(result, _userAccessor.Id, memberId, kickingMemberConnections, Context.ConnectionId));
+    }
+
+    public async Task AddGroupChatMember(Guid chatId, Guid memberId)
+    {
+        var result = await _mediator.Send(new AddMemberCommand(chatId, _userAccessor.Id, memberId));
+        var addingMemberConnections = GetUserConnections(memberId);
+
+        await _mediator.Publish(new AddGroupChatMemberEvent(result, Context.ConnectionId, memberId, addingMemberConnections));
+    }
+
+    public async Task RenameGroupChat(Guid chatId, string newName)
+    {
+        var result = await _mediator.Send(new RenameChatCommand(chatId, _userAccessor.Id, newName));
+
+        await _mediator.Publish(new RenameGroupChatEvent(result, Context.ConnectionId));
+    }
+
+    public async Task EditGroupChatAdmin(Guid chatId, Guid memberId, bool isAdmin)
+    {
+        var result = await _mediator.Send(new EditAdminCommand(chatId, _userAccessor.Id, memberId, isAdmin));
+
+        await _mediator.Publish(new EditGroupChatAdminEvent(result, Context.ConnectionId, isAdmin, memberId));
+    }
+    #endregion
+
+    #region Messages
     public async Task SendMessage(Guid chatId, string message)
     {
         var result = await _mediator.Send(new SendMessageCommand(chatId, _userAccessor.Id, message));
@@ -109,6 +134,7 @@ public class MessengerHub : Hub<IMessengerClient>
         var result = await _mediator.Send(new RedactMessageCommand(messageId, _userAccessor.Id, newMessage));
         await _mediator.Publish(new RedactMessageEvent(result, Context.ConnectionId));
     }
+    #endregion
 
     private static HashSet<string> GetUserConnections(Guid user)
     {

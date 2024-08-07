@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.EditAdmin;
 
-public class EditAdminCommand : IRequest<Result<ChatMemberModel>>
+public class EditAdminCommand : IRequest<Result<ChatModelResult>>
 {
     public Guid AdminId { get; set; }
 

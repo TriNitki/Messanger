@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Notifications;
 
-public class CreateChatEvent : IBaseEvent
+public class RenameGroupChatEvent : IBaseEvent
 {
     public ChatModelResult? Chat { get; set; }
 
@@ -14,14 +14,11 @@ public class CreateChatEvent : IBaseEvent
 
     public string CallerConnectionId { get; set; }
 
-    public HashSet<string> ReceiverConnectionIds { get; set; }
-
-    public CreateChatEvent(Result<ChatModelResult> result, string callerConnectionId, HashSet<string> receiverConnectionIds)
+    public RenameGroupChatEvent(Result<ChatModelResult> result, string callerConnectionId)
     {
         Chat = result.GetValueOrDefault();
         IsSuccess = result.IsSuccess;
         Errors = result.Errors;
         CallerConnectionId = callerConnectionId;
-        ReceiverConnectionIds = receiverConnectionIds;
     }
 }
