@@ -7,11 +7,11 @@ public class GetChatsQuery : IRequest<Result<List<GetChatsResponse.Chat>>>
 {
     public Guid UserId { get; set; }
 
-    public int FromChat { get; set; }
+    public int? FromChat { get; set; }
 
-    public int ToChat { get; set; }
+    public int? ToChat { get; set; }
 
-    public GetChatsQuery(Guid userId, int fromChat, int toChat)
+    public GetChatsQuery(Guid userId, int? fromChat = null, int? toChat = null)
     {
         UserId = userId;
         FromChat = fromChat;

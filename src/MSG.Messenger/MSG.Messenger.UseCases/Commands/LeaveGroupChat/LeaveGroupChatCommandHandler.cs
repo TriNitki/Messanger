@@ -40,7 +40,7 @@ public class LeaveGroupChatCommandHandler : IRequestHandler<LeaveGroupChatComman
         await _chatMemberRepository.DeleteMemberAsync(leaveMember);
 
         Guid? newAdminId = null;
-        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin))
+        if (leaveMember.IsAdmin && !members.Any(x => x.IsAdmin && x.UserId != leaveMember.UserId))
         {
             var rndMember = members.FindAll(x => x.UserId != request.UserId).MinBy(x => x.UserId);
 

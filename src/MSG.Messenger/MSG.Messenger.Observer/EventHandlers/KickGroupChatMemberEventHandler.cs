@@ -13,14 +13,13 @@ public class KickGroupChatMemberEventHandler(IHubContext<MessengerHub, IMessenge
     {
         var groupName = notification.KickingChat!.Id.ToString();
 
+        await MessengerHubContext.Clients.Group(groupName).MemberKickedFromGroupChat(
+            notification.KickingChat!, (Guid)notification.AdminId!, (Guid)notification.KickingMemberId!);
+
         foreach (var kickingConnections in notification.KickingMemberConnections!)
         {
             await MessengerHubContext.Groups.RemoveFromGroupAsync(
                 kickingConnections, groupName, cancellationToken);
         }
-
-        await MessengerHubContext.Clients.Group(groupName)
-            .MemberKickedFromGroupChat(
-                notification.KickingChat!, (Guid)notification.AdminId!, (Guid)notification.KickingMemberId!);
     }
 }

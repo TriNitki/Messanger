@@ -13,12 +13,15 @@ public class AddGroupChatMemberEventHandler(IHubContext<MessengerHub, IMessenger
     {
         var groupName = notification.Chat!.Id.ToString();
 
+        await MessengerHubContext.Clients.Group(groupName)
+            .NewGroupChatMember(notification.Chat!, (Guid)notification.AddingMemberId!);
+
+        await MessengerHubContext.Clients.User(notification.AddingMemberId.ToString()!)
+            .YouAddedToGroupChat(notification.Chat);
+
         foreach (var addingMemberConnection in notification.AddingMemberConnections)
         {
             await MessengerHubContext.Groups.AddToGroupAsync(addingMemberConnection, groupName, cancellationToken);
         }
-
-        await MessengerHubContext.Clients.Group(groupName)
-            .NewGroupChatMember(notification.Chat!, (Guid)notification.AddingMemberId!);
     }
 }

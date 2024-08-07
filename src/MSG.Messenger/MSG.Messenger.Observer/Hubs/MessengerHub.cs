@@ -14,6 +14,7 @@ using MSG.Messenger.UseCases.Commands.RedactMessage;
 using MSG.Messenger.UseCases.Commands.RenameChat;
 using MSG.Messenger.UseCases.Commands.SendMessage;
 using MSG.Messenger.UseCases.Notifications;
+using MSG.Messenger.UseCases.Queries.GetChats;
 using MSG.Security.Authorization;
 
 namespace MSG.Messenger.Observer.Hubs;
@@ -35,13 +36,19 @@ public class MessengerHub : Hub<IMessengerClient>
         _userAccessor = userAccessor;
         _mediator = mediator;
     }
-        
-    public override Task OnConnectedAsync()
+
+    public override async Task OnConnectedAsync()
     {
         if (!ConnectedUsers.TryAdd(_userAccessor.Id, [Context.ConnectionId]))
             ConnectedUsers[_userAccessor.Id].Add(Context.ConnectionId);
 
-        return Task.CompletedTask;
+        var chats = (await _mediator.Send(new GetChatsQuery(_userAccessor.Id))).GetValueOrDefault();
+        if (chats is null) return;
+
+        foreach (var chat in chats)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, chat.Id.ToString());
+        }
     }
 
     public override Task OnDisconnectedAsync(Exception? exception)

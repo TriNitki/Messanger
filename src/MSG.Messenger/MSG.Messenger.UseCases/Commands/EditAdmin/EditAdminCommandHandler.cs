@@ -31,6 +31,9 @@ public class EditAdminCommandHandler : AdminBasedHandler, IRequestHandler<EditAd
         if (member is null)
             return Result<ChatModelResult>.Invalid("User is not the member of this group chat");
 
+        if (member.IsAdmin == request.IsAdmin)
+            return Result<ChatModelResult>.Invalid("Such a role for the member has already been set");
+
         member.IsAdmin = request.IsAdmin;
         await _chatMemberRepository.UpdateAsync(member);
         return Result<ChatModelResult>.Success(chat.IgnoreMembers().ToResult());

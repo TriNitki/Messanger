@@ -11,7 +11,11 @@ public interface IMessengerClient
 
     Task MemberLeftGroupChat(ChatModelResult chat, Guid memberId);
 
+    Task ChatDeleted(Guid chatId);
+
     Task MemberKickedFromGroupChat(ChatModelResult chat, Guid adminId, Guid kickedMemberId);
+
+    Task YouAddedToGroupChat(ChatModelResult chat);
 
     Task NewGroupChatMember(ChatModelResult chat, Guid memberId);
 

@@ -19,6 +19,8 @@ public class LeaveGroupChatEventHandler(IHubContext<MessengerHub, IMessengerClie
                 leavingConnections, groupName, cancellationToken);
         }
 
+        await MessengerHubContext.Clients.User(notification.LeavingMemberId.ToString()!)
+            .ChatDeleted(notification.LeavingChat!.Id);
         await MessengerHubContext.Clients.Group(groupName)
             .MemberLeftGroupChat(notification.LeavingChat!, (Guid)notification.LeavingMemberId!);
 
