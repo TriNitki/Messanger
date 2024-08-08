@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.DeleteMessage;
 
-public class DeleteMessageCommand : IRequest<Result<MessageModel>>  
+public class DeleteMessageCommand : IRequest<Result<ChatMessageModel>>  
 {
     public Guid MessageId { get; set; }
 

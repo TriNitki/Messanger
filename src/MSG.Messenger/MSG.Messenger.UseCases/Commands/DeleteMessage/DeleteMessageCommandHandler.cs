@@ -5,23 +5,23 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.DeleteMessage;
 
-public class DeleteMessageCommandHandler : IRequestHandler<DeleteMessageCommand, Result<MessageModel>>
+public class DeleteMessageCommandHandler : IRequestHandler<DeleteMessageCommand, Result<ChatMessageModel>>
 {
-    private readonly IMessageRepository _messageRepository;
+    private readonly IChatMessageRepository _chatMessageRepository;
 
-    public DeleteMessageCommandHandler(IMessageRepository messageRepository)
+    public DeleteMessageCommandHandler(IChatMessageRepository chatMessageRepository)
     {
-        _messageRepository = messageRepository;
+        _chatMessageRepository = chatMessageRepository;
     }
 
-    public async Task<Result<MessageModel>> Handle(DeleteMessageCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ChatMessageModel>> Handle(DeleteMessageCommand request, CancellationToken cancellationToken)
     {
-        var message = await _messageRepository.GetByIdAsync(request.MessageId);
+        var message = await _chatMessageRepository.GetByIdAsync(request.MessageId);
         if (message == null || message.SentBy != request.MemberId || message.IsDeleted)
-            return Result<MessageModel>.Invalid("Invalid message identifier.");
+            return Result<ChatMessageModel>.Invalid("Invalid message identifier.");
 
         message.IsDeleted = true;
-        await _messageRepository.UpdateAsync(message);
-        return Result<MessageModel>.Success(message);
+        await _chatMessageRepository.UpdateAsync(message);
+        return Result<ChatMessageModel>.Success(message);
     }
 }

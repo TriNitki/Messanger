@@ -3,7 +3,7 @@
 /// <summary>
 /// Message model
 /// </summary>
-public class MessageModel
+public class ChatMessageModel
 {
     /// <summary>
     /// New message constructor
@@ -11,7 +11,7 @@ public class MessageModel
     /// <param name="chatId"> Chat id </param>
     /// <param name="sentBy"> Member id who sent the message </param>
     /// <param name="content"> Content of the message </param>
-    public MessageModel(Guid chatId, Guid sentBy, string content)
+    public ChatMessageModel(Guid chatId, Guid sentBy, string content)
     {
         Id = Guid.NewGuid();
         ChatId = chatId;
@@ -32,7 +32,7 @@ public class MessageModel
     /// <param name="sendingDt"> Date time when the message was sent </param>
     /// <param name="isRedacted"> Whether the message is redacted </param>
     /// <param name="isDeleted"> Whether the message is deleted </param>
-    public MessageModel(Guid id, Guid chatId, Guid sentBy, string content, DateTime sendingDt, bool isRedacted, bool isDeleted)
+    public ChatMessageModel(Guid id, Guid chatId, Guid sentBy, string content, DateTime sendingDt, bool isRedacted, bool isDeleted)
     {
         Id = id;
         ChatId = chatId;

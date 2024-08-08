@@ -29,6 +29,9 @@ public class MessengerHub : Hub<IMessengerClient>
 
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// Dictionary ids of user connections by their id
+    /// </summary>
     private static readonly ConcurrentDictionary<Guid, HashSet<string>> ConnectedUsers = [];
 
     public MessengerHub(UserAccessor userAccessor, IMediator mediator)
@@ -143,12 +146,22 @@ public class MessengerHub : Hub<IMessengerClient>
     }
     #endregion
 
+    /// <summary>
+    /// Gets the user current connections
+    /// </summary>
+    /// <param name="user"> User id </param>
+    /// <returns> USer current connections </returns>
     private static HashSet<string> GetUserConnections(Guid user)
     {
         ConnectedUsers.TryGetValue(user, out var userConnections);
         return userConnections ?? [];
     }
 
+    /// <summary>
+    /// Gets the users current connections
+    /// </summary>
+    /// <param name="users"> Collection of user ids </param>
+    /// <returns> Users current connections </returns>
     private static HashSet<string> GetUserConnections(IEnumerable<Guid> users)
     {
         HashSet<string> connections = [];

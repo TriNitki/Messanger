@@ -58,7 +58,7 @@ public class GetChatsResponse
 
     public class LastMessage
     {
-        public LastMessage(List<MessageModel> messages)
+        public LastMessage(List<ChatMessageModel> messages)
         {
             var message = messages.MaxBy(x => x.SendingDt)!;
             SentBy = message.SentBy;

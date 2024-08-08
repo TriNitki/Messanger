@@ -6,7 +6,7 @@ namespace MSG.Messenger.UseCases.Notifications;
 
 public class DeleteMessageEvent : IBaseEvent
 {
-    public MessageModel? Message { get; set; }
+    public ChatMessageModel? Message { get; set; }
 
     public bool IsSuccess { get; set; }
 
@@ -14,7 +14,7 @@ public class DeleteMessageEvent : IBaseEvent
 
     public string CallerConnectionId { get; set; }
 
-    public DeleteMessageEvent(Result<MessageModel> result, string callerConnectionId)
+    public DeleteMessageEvent(Result<ChatMessageModel> result, string callerConnectionId)
     {
         Message = result.GetValueOrDefault();
         IsSuccess = result.IsSuccess;

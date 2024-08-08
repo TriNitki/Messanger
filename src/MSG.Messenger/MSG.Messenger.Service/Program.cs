@@ -91,7 +91,7 @@ internal class Program
 
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IChatMemberRepository, ChatMemberRepository>();
-        services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
 
         services.AddScoped<UserAccessor>();
     }

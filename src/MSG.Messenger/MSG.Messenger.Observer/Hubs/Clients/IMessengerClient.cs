@@ -25,11 +25,11 @@ public interface IMessengerClient
 
     Task RenamedGroupChat(ChatModelResult chat);
 
-    Task ReceivedNewMessage(MessageModel message);
+    Task ReceivedNewMessage(ChatMessageModel chatMessage);
 
-    Task DeletedExistingMessage(MessageModel message);
+    Task DeletedExistingMessage(ChatMessageModel chatMessage);
 
-    Task RedactedExistingMessage(MessageModel message);
+    Task RedactedExistingMessage(ChatMessageModel chatMessage);
 
     Task ReceivedErrors(string[] errors);
 }

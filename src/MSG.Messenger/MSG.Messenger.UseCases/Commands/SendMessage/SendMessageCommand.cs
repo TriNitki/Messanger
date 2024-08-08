@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.SendMessage;
 
-public class SendMessageCommand : IRequest<Result<MessageModel>>
+public class SendMessageCommand : IRequest<Result<ChatMessageModel>>
 {
     public Guid ChatId { get; set; }
 

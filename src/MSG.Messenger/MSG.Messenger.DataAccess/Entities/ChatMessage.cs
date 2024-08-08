@@ -5,7 +5,7 @@ namespace MSG.Messenger.DataAccess.Entities;
 /// <summary>
 /// Message
 /// </summary>
-public class Message
+public class ChatMessage
 {
     /// <summary>
     /// Message id

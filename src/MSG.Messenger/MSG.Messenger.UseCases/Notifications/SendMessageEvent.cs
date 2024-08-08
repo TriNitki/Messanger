@@ -6,7 +6,7 @@ namespace MSG.Messenger.UseCases.Notifications;
 
 public class SendMessageEvent : IBaseEvent
 {
-    public MessageModel? Message { get; set; }
+    public ChatMessageModel? Message { get; set; }
 
     public bool IsSuccess { get; set; }
 
@@ -14,7 +14,7 @@ public class SendMessageEvent : IBaseEvent
 
     public string CallerConnectionId { get; set; }
 
-    public SendMessageEvent(Result<MessageModel> result, string callerConnectionId)
+    public SendMessageEvent(Result<ChatMessageModel> result, string callerConnectionId)
     {
         Message = result.GetValueOrDefault();
         IsSuccess = result.IsSuccess;

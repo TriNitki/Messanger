@@ -21,6 +21,6 @@ public class DbMappingProfile : Profile
 
         CreateMap<ChatMember, ChatMemberModel>().ReverseMap();
 
-        CreateMap<Message, MessageModel>().ReverseMap();
+        CreateMap<ChatMessage, ChatMessageModel>().ReverseMap();
     }
 }

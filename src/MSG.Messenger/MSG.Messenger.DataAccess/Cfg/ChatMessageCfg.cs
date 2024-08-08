@@ -4,9 +4,9 @@ using MSG.Messenger.DataAccess.Entities;
 
 namespace MSG.Messenger.DataAccess.Cfg;
 
-internal class MessageCfg : IEntityTypeConfiguration<Message>
+internal class ChatMessageCfg : IEntityTypeConfiguration<ChatMessage>
 {
-    public void Configure(EntityTypeBuilder<Message> builder)
+    public void Configure(EntityTypeBuilder<ChatMessage> builder)
     {
         builder.HasOne<Chat>()
             .WithMany(x => x.Messages)
