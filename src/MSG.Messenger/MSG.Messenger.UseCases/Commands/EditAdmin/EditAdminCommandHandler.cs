@@ -5,27 +5,37 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.EditAdmin;
 
-public class EditAdminCommandHandler : AdminBasedHandler, IRequestHandler<EditAdminCommand, Result<ChatMemberModel>>
+public class EditAdminCommandHandler : AdminBasedHandler, IRequestHandler<EditAdminCommand, Result<ChatModelResult>>
 {
     private readonly IChatMemberRepository _chatMemberRepository;
+    private readonly IChatRepository _chatRepository;
 
-    public EditAdminCommandHandler(IChatMemberRepository chatMemberRepository)
+    public EditAdminCommandHandler(IChatMemberRepository chatMemberRepository, IChatRepository chatRepository)
     : base(chatMemberRepository)
     {
         _chatMemberRepository = chatMemberRepository;
+        _chatRepository = chatRepository;
     }
 
-    public async Task<Result<ChatMemberModel>> Handle(EditAdminCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ChatModelResult>> Handle(EditAdminCommand request, CancellationToken cancellationToken)
     {
         if (!await IsAdmin(request.ChatId, request.AdminId))
-            return Result<ChatMemberModel>.Invalid("User is not the admin of this group chat");
+            return Result<ChatModelResult>.Invalid("User is not the admin of this group chat");
 
-        var member = await _chatMemberRepository.GetAsync(request.MemberId, request.ChatId);
+        var chat = await _chatRepository.GetByIdAsync(request.ChatId, true, false);
+
+        if (chat is null)
+            return Result<ChatModelResult>.Invalid("Wrong group chat id");
+
+        var member = chat.Members.Find(x => x.UserId == request.MemberId);
         if (member is null)
-            return Result<ChatMemberModel>.Invalid("User is not the member of this group chat");
+            return Result<ChatModelResult>.Invalid("User is not the member of this group chat");
+
+        if (member.IsAdmin == request.IsAdmin)
+            return Result<ChatModelResult>.Invalid("Such a role for the member has already been set");
 
         member.IsAdmin = request.IsAdmin;
         await _chatMemberRepository.UpdateAsync(member);
-        return Result<ChatMemberModel>.Success(member);
+        return Result<ChatModelResult>.Success(chat.IgnoreMembers().ToResult());
     }
 }

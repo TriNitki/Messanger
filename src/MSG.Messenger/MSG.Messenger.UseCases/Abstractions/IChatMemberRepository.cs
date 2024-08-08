@@ -10,20 +10,20 @@ public interface IChatMemberRepository
     /// <summary>
     /// Add new chat member
     /// </summary>
-    /// <param name="member"> Chat member model </param>
-    public Task AddAsync(ChatMemberModel member);
+    /// <param name="chatMember"> Chat member model </param>
+    public Task AddAsync(ChatMemberModel chatMember);
 
     /// <summary>
     /// Update existing chat member
     /// </summary>
-    /// <param name="member"> Chat member model </param>
-    public Task UpdateAsync(ChatMemberModel member);
+    /// <param name="chatMember"> Chat member model </param>
+    public Task UpdateAsync(ChatMemberModel chatMember);
 
     /// <summary>
     /// Delete chat member
     /// </summary>
-    /// <param name="member"> Chat member model </param>
-    public Task DeleteMemberAsync(ChatMemberModel member);
+    /// <param name="chatMember"> Chat member model </param>
+    public Task DeleteMemberAsync(ChatMemberModel chatMember);
 
     /// <summary>
     /// Get chat member

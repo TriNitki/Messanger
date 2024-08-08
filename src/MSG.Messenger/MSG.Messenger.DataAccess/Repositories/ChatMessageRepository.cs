@@ -6,21 +6,21 @@ using MSG.Messenger.DataAccess.Entities;
 
 namespace MSG.Messenger.DataAccess.Repositories;
 
-public class MessageRepository : IMessageRepository
+public class ChatMessageRepository : IChatMessageRepository
 {
     private readonly DataBaseContext _context;
     private readonly IMapper _mapper;
 
-    public MessageRepository(DataBaseContext context, IMapper mapper)
+    public ChatMessageRepository(DataBaseContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
     }
 
-    public async Task<List<MessageModel>> GetByChatIdAsync(
+    public async Task<List<ChatMessageModel>> GetByChatIdAsync(
         Guid chatId, int? fromMessage = null, int? toMessage = null, bool sortByNewest = true, bool excludeDeleted = true)
     {
-        var entities = _context.Messages
+        var entities = _context.ChatMessages
             .Where(x => x.ChatId == chatId)
             .AsQueryable();
 
@@ -42,29 +42,29 @@ public class MessageRepository : IMessageRepository
         }
 
         var messages = await entities.AsNoTracking().ToListAsync().ConfigureAwait(false);
-        return _mapper.Map<List<MessageModel>>(messages);
+        return _mapper.Map<List<ChatMessageModel>>(messages);
     }
 
-    public async Task<MessageModel?> GetByIdAsync(Guid messageId)
+    public async Task<ChatMessageModel?> GetByIdAsync(Guid messageId)
     {
-        var entity = await _context.Messages.AsNoTracking()
+        var entity = await _context.ChatMessages.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == messageId)
             .ConfigureAwait(false);
 
-        return _mapper.Map<MessageModel?>(entity);
+        return _mapper.Map<ChatMessageModel?>(entity);
     }
 
-    public async Task CreateAsync(MessageModel message)
+    public async Task CreateAsync(ChatMessageModel chatMessage)
     {
-        var entity = _mapper.Map<Message>(message);
-        await _context.Messages.AddAsync(entity).ConfigureAwait(false);
+        var entity = _mapper.Map<ChatMessage>(chatMessage);
+        await _context.ChatMessages.AddAsync(entity).ConfigureAwait(false);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(MessageModel message)
+    public async Task UpdateAsync(ChatMessageModel chatMessage)
     {
-        var entity = _mapper.Map<Message>(message);
-        _context.Messages.Update(entity);
+        var entity = _mapper.Map<ChatMessage>(chatMessage);
+        _context.ChatMessages.Update(entity);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 }

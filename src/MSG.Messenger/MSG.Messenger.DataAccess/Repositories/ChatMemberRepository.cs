@@ -17,24 +17,24 @@ public class ChatMemberRepository : IChatMemberRepository
         _mapper = mapper;
     }
 
-    public async Task AddAsync(ChatMemberModel member)
+    public async Task AddAsync(ChatMemberModel chatMember)
     {
-        var entity = _mapper.Map<ChatMember>(member);
+        var entity = _mapper.Map<ChatMember>(chatMember);
         await _context.ChatMembers.AddAsync(entity);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(ChatMemberModel member)
+    public async Task UpdateAsync(ChatMemberModel chatMember)
     {
-        var entity = _mapper.Map<ChatMember>(member);
+        var entity = _mapper.Map<ChatMember>(chatMember);
         _context.ChatMembers.Update(entity);
         await _context.SaveChangesAsync().ConfigureAwait(false);
 
     }
 
-    public async Task DeleteMemberAsync(ChatMemberModel member)
+    public async Task DeleteMemberAsync(ChatMemberModel chatMember)
     {
-        var entity = _mapper.Map<ChatMember>(member);
+        var entity = _mapper.Map<ChatMember>(chatMember);
         _context.ChatMembers.Remove(entity);
         await _context.SaveChangesAsync().ConfigureAwait(false);
     }

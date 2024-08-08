@@ -12,7 +12,7 @@ public class DataBaseContext(DbContextOptions<DataBaseContext> options) : DbCont
 {
     internal DbSet<Chat> Chats { get; set; }
 
-    internal DbSet<Message> Messages { get; set; }
+    internal DbSet<ChatMessage> ChatMessages { get; set; }
 
     internal DbSet<ChatMember> ChatMembers { get; set; }
 

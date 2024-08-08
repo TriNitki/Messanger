@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using MSG.Messenger.Core;
 using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.DeleteMessage;
 
-public class DeleteMessageCommand : IRequest<Result<Unit>>  
+public class DeleteMessageCommand : IRequest<Result<ChatMessageModel>>  
 {
     public Guid MessageId { get; set; }
 

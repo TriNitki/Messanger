@@ -5,7 +5,7 @@ namespace MSG.Messenger.UseCases.Abstractions;
 /// <summary>
 /// Message repository interface
 /// </summary>
-public interface IMessageRepository
+public interface IChatMessageRepository
 {
     /// <summary>
     /// Get messages by chat id
@@ -16,7 +16,7 @@ public interface IMessageRepository
     /// <param name="sortByNewest"> Whether messages should be sorted by newest </param>
     /// <param name="excludeDeleted"> Whether deleted messages should be ignored </param>
     /// <returns> List of messages </returns>
-    public Task<List<MessageModel>> GetByChatIdAsync(
+    public Task<List<ChatMessageModel>> GetByChatIdAsync(
         Guid chatId, int? fromMessage = null, int? toMessage = null, bool sortByNewest = true, bool excludeDeleted = true);
 
     /// <summary>
@@ -24,17 +24,17 @@ public interface IMessageRepository
     /// </summary>
     /// <param name="messageId"> Message id </param>
     /// <returns> Message model </returns>
-    public Task<MessageModel?> GetByIdAsync(Guid messageId);
+    public Task<ChatMessageModel?> GetByIdAsync(Guid messageId);
 
     /// <summary>
-    /// Create message
+    /// Create chatMessage
     /// </summary>
-    /// <param name="message"> Message model </param>
-    public Task CreateAsync(MessageModel message);
+    /// <param name="chatMessage"> Message model </param>
+    public Task CreateAsync(ChatMessageModel chatMessage);
     
     /// <summary>
-    /// Update existing message
+    /// Update existing chatMessage
     /// </summary>
-    /// <param name="message"> Message model </param>
-    public Task UpdateAsync(MessageModel message);
+    /// <param name="chatMessage"> Message model </param>
+    public Task UpdateAsync(ChatMessageModel chatMessage);
 }

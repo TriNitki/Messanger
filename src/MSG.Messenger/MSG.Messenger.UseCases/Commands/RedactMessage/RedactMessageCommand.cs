@@ -4,7 +4,7 @@ using Packages.Application.UseCases;
 
 namespace MSG.Messenger.UseCases.Commands.RedactMessage;
 
-public class RedactMessageCommand : IRequest<Result<MessageModel>>
+public class RedactMessageCommand : IRequest<Result<ChatMessageModel>>
 {
     public Guid MessageId { get; set; }
 

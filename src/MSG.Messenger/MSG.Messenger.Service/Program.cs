@@ -4,11 +4,15 @@ using Packages.Application.Consul;
 using System.Reflection;
 using MSG.Messenger.DataAccess;
 using MSG.Messenger.DataAccess.Repositories;
+using MSG.Messenger.Observer.EventHandlers;
+using MSG.Messenger.Observer.Hubs;
 using MSG.Messenger.UseCases.Abstractions;
 using MSG.Messenger.UseCases.Commands.CreateGroupChat;
+using MSG.Messenger.UseCases.Notifications;
 using MSG.Security.Authentication.Integration;
 using MSG.Security.Authorization.Integration;
 using Packages.Application.Data.DI;
+using MSG.Security.Authorization;
 
 namespace MSG.Messenger.Service;
 
@@ -79,13 +83,17 @@ internal class Program
     {
         services.AddAutoMapper(typeof(DbMappingProfile).Assembly);
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([
-            typeof(CreateGroupChatCommand).Assembly
+            typeof(CreateGroupChatCommand).Assembly,
+            typeof(SendMessageEventHandler).Assembly
         ]));
         services.AddDataContext<DataBaseContext>(configuration);
+        services.AddSignalR();
 
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IChatMemberRepository, ChatMemberRepository>();
-        services.AddScoped<IMessageRepository, MessageRepository>();
+        services.AddScoped<IChatMessageRepository, ChatMessageRepository>();
+
+        services.AddScoped<UserAccessor>();
     }
 
     /// <summary>
@@ -108,7 +116,6 @@ internal class Program
             using var scope = app.Services.CreateScope();
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<DataBaseContext>();
-            await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
         }
 
@@ -121,6 +128,7 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapHub<MessengerHub>("hubs/messenger");
         app.MapControllers();
 
         await app.RunAsync();
