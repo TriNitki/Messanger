@@ -1,7 +1,7 @@
-# ProjectBase
+# Messenger
 
-Configuration example:
-```
+### MSG.Security configuration example
+```json
 {
   "Logging": {
     "LogLevel": {
@@ -15,7 +15,7 @@ Configuration example:
   "ConsulUri": "http://localhost:8500",
 
   "ConnectionStrings": {
-    "Npgsql": "host=localhost;database=test_db;username=postgres;password=postgres"
+    "Npgsql": "host=localhost;database=msg_security;username=postgres;password=postgres"
   },
 
   "SecurityOptions": {
@@ -31,10 +31,34 @@ Configuration example:
   "RoleOptions": {
     "DefaultUserRoles": [
       "DefaultRole"
-    ],
-    "DefaultServiceRoles": [
-      "Service"
     ]
   }
+}
+```
+
+### MSG.Messenger configuration example
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "ServiceName": "messenger",
+  "ServiceSecret": "messenger",
+
+  "ConnectionStrings": {
+    "Npgsql": "host=localhost;database=msg_messenger;username=postgres;password=postgres"
+  },
+
+  "ConsulUri": "http://localhost:8500",
+  "FabioUrl": "http://localhost:9998",
+
+  "SecretKey": "LDktKdoQak3Pk0cnXxCltA-LDktKdoQak3Pk0cnXxCltA",
+  "SecurityServiceUri": "https://localhost:7150"
 }
 ```
