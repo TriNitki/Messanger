@@ -37,7 +37,7 @@ public static class ConsulExtensionsForDi
         var consulUri = configuration["ConsulUri"];
 
         if (string.IsNullOrWhiteSpace(consulUri))
-            throw new ConsulConfigurationException("Не задана строка подключения к Consul");
+            throw new ConsulConfigurationException("Consul connection string not set");
 
         var uri = new Uri(consulUri);
 

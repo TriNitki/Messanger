@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSG.Messenger.UseCases", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSG.Messenger.DataAccess", "src\MSG.Messenger\MSG.Messenger.DataAccess\MSG.Messenger.DataAccess.csproj", "{105DFE2A-E688-4891-B489-7439EE0B09A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSG.Messenger.Observer", "src\MSG.Messenger\MSG.Messenger.Observer\MSG.Messenger.Observer.csproj", "{2B8CEF91-373A-4232-A99D-669C2B1E9B69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSG.Messenger.Observer", "src\MSG.Messenger\MSG.Messenger.Observer\MSG.Messenger.Observer.csproj", "{2B8CEF91-373A-4232-A99D-669C2B1E9B69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

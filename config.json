@@ -1,0 +1,12 @@
+{
+    "node_name": "test-server",
+    "datacenter":"dc1",
+    "server":true,
+    "enable_debug":true,
+    "addresses": {
+          "http": "0.0.0.0"
+    },
+    "connect": {
+          "enabled":true
+    }
+}

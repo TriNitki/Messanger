@@ -33,6 +33,7 @@ internal class Program
         {
             logger.Debug("init main");
             var builder = ConfigureApp(args);
+            logger.Debug("Application configured");
             await RunApp(builder);
         }
         catch (Exception ex)
@@ -163,12 +164,12 @@ internal class Program
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
-
-            using var scope = app.Services.CreateScope();
-            var services = scope.ServiceProvider;
-            var context = services.GetRequiredService<DataBaseContext>();
-            await context.Database.EnsureCreatedAsync();
         }
+
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<DataBaseContext>();
+        await context.Database.EnsureCreatedAsync();
 
         app.UseRouting();
         app.UseCors();

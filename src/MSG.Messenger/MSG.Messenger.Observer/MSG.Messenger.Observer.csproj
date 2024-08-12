@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\MSG.Security\MSG.Security.Authorization\MSG.Security.Authorization.csproj" />
     <ProjectReference Include="..\MSG.Messenger.UseCases\MSG.Messenger.UseCases.csproj" />
   </ItemGroup>

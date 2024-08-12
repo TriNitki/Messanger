@@ -28,7 +28,7 @@ internal static class SelfRegistrationExtension
             }
 
             var configuration = sp.GetRequiredService<IConfiguration>();
-            var aspUrls = configuration["urls"];
+            var aspUrls = configuration["ASPNETCORE_URLS"];
 
             if (string.IsNullOrEmpty(aspUrls))
             {

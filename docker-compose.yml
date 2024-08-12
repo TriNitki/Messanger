@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  msg-security:
+    container_name: msg-security
+    build:
+      context: .
+      dockerfile: security_Dockerfile
+    ports:
+      - "5001:8080"
+      - "5002:8081"
+    depends_on:
+      - msg-db
+      - fabio
+      - consul
+    
+  msg-messenger:
+    container_name: msg-messenger
+    build:
+      context: .
+      dockerfile: messenger_Dockerfile
+    ports:
+      - "5003:8080"
+      - "5004:8081"
+    depends_on:
+      - msg-security
+      - msg-db
+      - fabio
+      - consul
+
+  msg-db:
+    image: postgres:15-alpine
+    container_name: msg-db
+    volumes:
+      - msg-db:/var/lib/postgresql/data/
+      - ./docker-multiple-dbs:/init-docker-multiple-dbs.sh
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: msg_security,postgres:msg_messenger,postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  fabio:
+    container_name: fabio
+    image: fabiolb/fabio:latest
+    restart: unless-stopped
+    environment:
+      - FABIO_REGISTRY_CONSUL_ADDR=consul:8500
+    ports:
+      - '9998:9998'
+      - '9999:9999'
+    
+  consul:
+    container_name: consul
+    image: hashicorp/consul:latest
+    restart: unless-stopped
+    volumes:
+     - ./config.json:/consul/config/config.json:ro
+     - consul_data:/consul/data
+    ports:
+      - '8500:8500'
+      - '8600:8600/tcp'
+      - '8600:8600/udp'
+    command: 'consul agent -data-dir /consul/config/ -config-file=/consul/config/config.json -ui -bootstrap-expect=1 -server -client 0.0.0.0'
+  
+volumes:
+  msg-db:
+  consul_data:
+    driver: local

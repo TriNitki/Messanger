@@ -1,0 +1,38 @@
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["src/MSG.Messenger/MSG.Messenger.Service/MSG.Messenger.Service.csproj", "src/MSG.Messenger/MSG.Messenger.Service/"]
+COPY ["Packages/Packages.Application.Consul/Packages.Application.Consul.csproj", "Packages/Packages.Application.Consul/"]
+COPY ["Packages/Packages.Application.Data.DI/Packages.Application.Data.DI.csproj", "Packages/Packages.Application.Data.DI/"]
+COPY ["src/MSG.Security/Authentication/MSG.Security.Authentication.Integration/MSG.Security.Authentication.Integration.csproj", "src/MSG.Security/Authentication/MSG.Security.Authentication.Integration/"]
+COPY ["src/MSG.Security/MSG.Security.Authorization/MSG.Security.Authorization.csproj", "src/MSG.Security/MSG.Security.Authorization/"]
+COPY ["src/MSG.Security/Authentication/MSG.Security.Authentication.Clients/MSG.Security.Authentication.Clients.csproj", "src/MSG.Security/Authentication/MSG.Security.Authentication.Clients/"]
+COPY ["src/MSG.Security/Authentication/MSG.Security.Authentication.Contracts/MSG.Security.Authentication.Contracts.csproj", "src/MSG.Security/Authentication/MSG.Security.Authentication.Contracts/"]
+COPY ["src/MSG.Security/Permission/MSG.Security.Permission.Clients/MSG.Security.Permission.Clients.csproj", "src/MSG.Security/Permission/MSG.Security.Permission.Clients/"]
+COPY ["src/MSG.Messenger/MSG.Messenger.DataAccess/MSG.Messenger.DataAccess.csproj", "src/MSG.Messenger/MSG.Messenger.DataAccess/"]
+COPY ["src/MSG.Messenger/MSG.Messenger.Observer/MSG.Messenger.Observer.csproj", "src/MSG.Messenger/MSG.Messenger.Observer/"]
+COPY ["src/MSG.Messenger/MSG.Messenger.UseCases/MSG.Messenger.UseCases.csproj", "src/MSG.Messenger/MSG.Messenger.UseCases/"]
+COPY ["Packages/Packages.Application.UseCases/Packages.Application.UseCases.csproj", "Packages/Packages.Application.UseCases/"]
+COPY ["src/MSG.Messenger/MSG.Messenger.Contracts/MSG.Messenger.Contracts.csproj", "src/MSG.Messenger/MSG.Messenger.Contracts/"]
+COPY ["src/MSG.Messenger/MSG.Messenger.Core/MSG.Messenger.Core.csproj", "src/MSG.Messenger/MSG.Messenger.Core/"]
+RUN dotnet restore "./src/MSG.Messenger/MSG.Messenger.Service/MSG.Messenger.Service.csproj"
+COPY . .
+WORKDIR "/src/src/MSG.Messenger/MSG.Messenger.Service"
+RUN dotnet build "./MSG.Messenger.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./MSG.Messenger.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "MSG.Messenger.Service.dll"]
